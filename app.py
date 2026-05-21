@@ -1,6 +1,10 @@
 import streamlit as st
 import pickle
 import sqlite3
+import nltk
+
+nltk.download('punkt')
+
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem.snowball import SnowballStemmer
 from datetime import datetime
