@@ -1,15 +1,9 @@
 import streamlit as st
 import pickle
 import sqlite3
-import nltk
-
-nltk.download('punkt')
-
-from nltk.tokenize import RegexpTokenizer
-from nltk.stem.snowball import SnowballStemmer
 from datetime import datetime
 
-# Page Config
+# Page Configuration
 st.set_page_config(
     page_title="AI Phishing Detection System",
     page_icon="🛡️",
@@ -20,43 +14,43 @@ st.set_page_config(
 conn = sqlite3.connect('users.db', check_same_thread=False)
 c = conn.cursor()
 
-# Create Tables
+# Create User Table
 c.execute('''
 CREATE TABLE IF NOT EXISTS users(
-username TEXT,
-password TEXT
+    username TEXT,
+    password TEXT
 )
 ''')
 
+# Create History Table
 c.execute('''
 CREATE TABLE IF NOT EXISTS history(
-username TEXT,
-url TEXT,
-result TEXT,
-time TEXT
+    username TEXT,
+    url TEXT,
+    result TEXT,
+    time TEXT
 )
 ''')
 
 conn.commit()
 
-# Load ML Model
+# Load ML Model and Vectorizer
 model = pickle.load(open('phishing_mnb.pkl', 'rb'))
 vectorizer = pickle.load(open('vectorizer.pkl', 'rb'))
 
-# Tokenizer and Stemmer
-tokenizer = RegexpTokenizer(r'[A-Za-z]+')
-stemmer = SnowballStemmer('english')
-
-# URL Preprocessing
+# URL Preprocessing Function
 def preprocess_url(url):
 
-    tokens = tokenizer.tokenize(url)
+    url = url.lower()
 
-    stemmed = [stemmer.stem(word) for word in tokens]
+    url = url.replace('.', ' ')
+    url = url.replace('/', ' ')
+    url = url.replace('-', ' ')
+    url = url.replace('?', ' ')
+    url = url.replace('=', ' ')
+    url = url.replace(':', ' ')
 
-    processed_url = ' '.join(stemmed)
-
-    return processed_url
+    return url
 
 
 # Session State
@@ -67,24 +61,25 @@ if 'username' not in st.session_state:
     st.session_state.username = ""
 
 
-# Sidebar
+# Sidebar Navigation
 menu = st.sidebar.selectbox(
-    "Navigation",
+    "Navigation Menu",
     ["Login", "Register", "Detection System", "History"]
 )
 
-# Register
+# ================= REGISTER =================
+
 if menu == "Register":
 
     st.title("📝 User Registration")
 
-    new_user = st.text_input("Username")
-    new_pass = st.text_input("Password", type='password')
+    new_user = st.text_input("Create Username")
+    new_pass = st.text_input("Create Password", type='password')
 
     if st.button("Register"):
 
         c.execute(
-            "INSERT INTO users VALUES (?,?)",
+            "INSERT INTO users VALUES (?, ?)",
             (new_user, new_pass)
         )
 
@@ -93,7 +88,8 @@ if menu == "Register":
         st.success("Registration Successful")
 
 
-# Login
+# ================= LOGIN =================
+
 elif menu == "Login":
 
     st.title("🔐 User Login")
@@ -118,17 +114,19 @@ elif menu == "Login":
             st.success("Login Successful")
 
         else:
-            st.error("Invalid Credentials")
+
+            st.error("Invalid Username or Password")
 
 
-# Detection System
+# ================= DETECTION SYSTEM =================
+
 elif menu == "Detection System":
 
     if st.session_state.logged_in:
 
         st.title("🛡️ AI Based Phishing Detection System")
 
-        st.markdown("### Enter URL to Detect Phishing")
+        st.markdown("### Enter URL for Detection")
 
         url = st.text_input("Enter Website URL")
 
@@ -152,9 +150,9 @@ elif menu == "Detection System":
 
                 st.success(prediction)
 
-            # Save History
+            # Save Detection History
             c.execute(
-                "INSERT INTO history VALUES (?,?,?,?)",
+                "INSERT INTO history VALUES (?, ?, ?, ?)",
                 (
                     st.session_state.username,
                     url,
@@ -166,10 +164,12 @@ elif menu == "Detection System":
             conn.commit()
 
     else:
+
         st.warning("Please Login First")
 
 
-# History
+# ================= HISTORY =================
+
 elif menu == "History":
 
     if st.session_state.logged_in:
@@ -183,12 +183,25 @@ elif menu == "History":
 
         data = c.fetchall()
 
-        for row in data:
+        if data:
 
-            st.write(f"🌐 URL: {row[1]}")
-            st.write(f"🛡️ Result: {row[2]}")
-            st.write(f"⏰ Time: {row[3]}")
-            st.markdown("---")
+            for row in data:
+
+                st.markdown(f"### 🌐 URL")
+                st.write(row[1])
+
+                st.markdown(f"### 🛡️ Result")
+                st.write(row[2])
+
+                st.markdown(f"### ⏰ Time")
+                st.write(row[3])
+
+                st.markdown("---")
+
+        else:
+
+            st.info("No Detection History Found")
 
     else:
+
         st.warning("Please Login First")
