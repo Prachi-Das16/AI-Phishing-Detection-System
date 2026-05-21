@@ -12,28 +12,28 @@ st.set_page_config(
     layout="centered"
 )
 
-# ================= DATABASE CONNECTION =================
+# ================= DATABASE =================
 
 conn = sqlite3.connect('users.db', check_same_thread=False)
 c = conn.cursor()
 
-# ================= CREATE TABLES =================
-
-c.execute('''
+# Create Users Table
+c.execute("""
 CREATE TABLE IF NOT EXISTS users(
     username TEXT,
     password TEXT
 )
-''')
+""")
 
-c.execute('''
+# Create History Table
+c.execute("""
 CREATE TABLE IF NOT EXISTS history(
     username TEXT,
     url TEXT,
     result TEXT,
     time TEXT
 )
-''')
+""")
 
 conn.commit()
 
@@ -42,7 +42,7 @@ conn.commit()
 model = pickle.load(open('phishing_mnb.pkl', 'rb'))
 vectorizer = pickle.load(open('vectorizer.pkl', 'rb'))
 
-# ================= PREPROCESSING FUNCTION =================
+# ================= PREPROCESS FUNCTION =================
 
 def preprocess_url(url):
 
@@ -58,7 +58,7 @@ def preprocess_url(url):
 
     return url
 
-# ================= SESSION STATE =================
+# ================= SESSION =================
 
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
@@ -66,14 +66,14 @@ if 'logged_in' not in st.session_state:
 if 'username' not in st.session_state:
     st.session_state.username = ""
 
-# ================= SIDEBAR MENU =================
+# ================= SIDEBAR =================
 
 menu = st.sidebar.selectbox(
     "Navigation Menu",
     ["Login", "Register", "Detection System", "History"]
 )
 
-# ================= REGISTER PAGE =================
+# ================= REGISTER =================
 
 if menu == "Register":
 
@@ -83,7 +83,7 @@ if menu == "Register":
 
     new_pass = st.text_input(
         "Create Password",
-        type='password'
+        type="password"
     )
 
     if st.button("Register"):
@@ -97,7 +97,7 @@ if menu == "Register":
 
         st.success("Registration Successful")
 
-# ================= LOGIN PAGE =================
+# ================= LOGIN =================
 
 elif menu == "Login":
 
@@ -107,7 +107,7 @@ elif menu == "Login":
 
     password = st.text_input(
         "Password",
-        type='password'
+        type="password"
     )
 
     if st.button("Login"):
@@ -122,6 +122,7 @@ elif menu == "Login":
         if data:
 
             st.session_state.logged_in = True
+
             st.session_state.username = username
 
             st.success("Login Successful")
@@ -138,34 +139,65 @@ elif menu == "Detection System":
 
         st.title("🛡️ AI Based Phishing Detection System")
 
-        st.markdown("### Enter URL for Detection")
+        st.markdown("## Enter URL for Detection")
 
         url = st.text_input("Enter Website URL")
 
         if st.button("Check URL"):
 
-            processed_url = preprocess_url(url)
+            suspicious_keywords = [
+                "login",
+                "verify",
+                "update",
+                "secure",
+                "bank",
+                "account",
+                "paypal"
+            ]
 
-            vector_input = vectorizer.transform([processed_url])
+            is_suspicious = False
 
-            prediction_result = model.predict(vector_input)[0]
+            # Number Detection
+            if any(char.isdigit() for char in url):
 
-            # ================= FIXED LABEL LOGIC =================
+                is_suspicious = True
 
-            if prediction_result == 'bad':
+            # Keyword Detection
+            for word in suspicious_keywords:
 
-                prediction = "✅ Legitimate Website"
+                if word in url.lower():
 
-                st.success(prediction)
+                    is_suspicious = True
 
-            else:
+            # Manual Rule Detection
+            if is_suspicious:
 
                 prediction = "⚠️ Phishing Website Detected"
 
                 st.error(prediction)
 
-            # ================= SAVE HISTORY =================
+            else:
 
+                processed_url = preprocess_url(url)
+
+                vector_input = vectorizer.transform([processed_url])
+
+                prediction_result = model.predict(vector_input)[0]
+
+                # Fixed Label Logic
+                if prediction_result == 'bad':
+
+                    prediction = "✅ Legitimate Website"
+
+                    st.success(prediction)
+
+                else:
+
+                    prediction = "⚠️ Phishing Website Detected"
+
+                    st.error(prediction)
+
+            # Save History
             c.execute(
                 "INSERT INTO history VALUES (?, ?, ?, ?)",
                 (
@@ -182,7 +214,7 @@ elif menu == "Detection System":
 
         st.warning("Please Login First")
 
-# ================= HISTORY PAGE =================
+# ================= HISTORY =================
 
 elif menu == "History":
 
