@@ -1,20 +1,23 @@
 import streamlit as st
 import pickle
 import sqlite3
+import re
 from datetime import datetime
 
-# Page Configuration
+# ================= PAGE CONFIG =================
+
 st.set_page_config(
     page_title="AI Phishing Detection System",
     page_icon="🛡️",
     layout="centered"
 )
 
-# Database Connection
+# ================= DATABASE =================
+
 conn = sqlite3.connect('users.db', check_same_thread=False)
 c = conn.cursor()
 
-# Create User Table
+# User Table
 c.execute('''
 CREATE TABLE IF NOT EXISTS users(
     username TEXT,
@@ -22,7 +25,7 @@ CREATE TABLE IF NOT EXISTS users(
 )
 ''')
 
-# Create History Table
+# History Table
 c.execute('''
 CREATE TABLE IF NOT EXISTS history(
     username TEXT,
@@ -34,34 +37,37 @@ CREATE TABLE IF NOT EXISTS history(
 
 conn.commit()
 
-# Load ML Model and Vectorizer
+# ================= LOAD MODEL =================
+
 model = pickle.load(open('phishing_mnb.pkl', 'rb'))
 vectorizer = pickle.load(open('vectorizer.pkl', 'rb'))
 
-# URL Preprocessing Function
+# ================= PREPROCESSING =================
+
 def preprocess_url(url):
+
+    url = str(url)
 
     url = url.lower()
 
-    url = url.replace('.', ' ')
-    url = url.replace('/', ' ')
-    url = url.replace('-', ' ')
-    url = url.replace('?', ' ')
-    url = url.replace('=', ' ')
-    url = url.replace(':', ' ')
+    url = re.sub(r'[^a-zA-Z]', ' ', url)
+
+    url = url.split()
+
+    url = ' '.join(url)
 
     return url
 
+# ================= SESSION STATE =================
 
-# Session State
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 
 if 'username' not in st.session_state:
     st.session_state.username = ""
 
+# ================= SIDEBAR =================
 
-# Sidebar Navigation
 menu = st.sidebar.selectbox(
     "Navigation Menu",
     ["Login", "Register", "Detection System", "History"]
@@ -74,7 +80,11 @@ if menu == "Register":
     st.title("📝 User Registration")
 
     new_user = st.text_input("Create Username")
-    new_pass = st.text_input("Create Password", type='password')
+
+    new_pass = st.text_input(
+        "Create Password",
+        type='password'
+    )
 
     if st.button("Register"):
 
@@ -87,7 +97,6 @@ if menu == "Register":
 
         st.success("Registration Successful")
 
-
 # ================= LOGIN =================
 
 elif menu == "Login":
@@ -95,7 +104,11 @@ elif menu == "Login":
     st.title("🔐 User Login")
 
     username = st.text_input("Username")
-    password = st.text_input("Password", type='password')
+
+    password = st.text_input(
+        "Password",
+        type='password'
+    )
 
     if st.button("Login"):
 
@@ -117,7 +130,6 @@ elif menu == "Login":
 
             st.error("Invalid Username or Password")
 
-
 # ================= DETECTION SYSTEM =================
 
 elif menu == "Detection System":
@@ -136,21 +148,22 @@ elif menu == "Detection System":
 
             vector_input = vectorizer.transform([processed_url])
 
-            result = model.predict(vector_input)[0]
+            prediction_result = model.predict(vector_input)[0]
 
-            if result == 'bad':
-
-                prediction = "⚠️ Phishing Website Detected"
-
-                st.error(prediction)
-
-            else:
+            # IMPORTANT FIX
+            if prediction_result == 'good':
 
                 prediction = "✅ Legitimate Website"
 
                 st.success(prediction)
 
-            # Save Detection History
+            else:
+
+                prediction = "⚠️ Phishing Website Detected"
+
+                st.error(prediction)
+
+            # Save History
             c.execute(
                 "INSERT INTO history VALUES (?, ?, ?, ?)",
                 (
@@ -166,7 +179,6 @@ elif menu == "Detection System":
     else:
 
         st.warning("Please Login First")
-
 
 # ================= HISTORY =================
 
@@ -187,13 +199,13 @@ elif menu == "History":
 
             for row in data:
 
-                st.markdown(f"### 🌐 URL")
+                st.markdown("### 🌐 URL")
                 st.write(row[1])
 
-                st.markdown(f"### 🛡️ Result")
+                st.markdown("### 🛡️ Result")
                 st.write(row[2])
 
-                st.markdown(f"### ⏰ Time")
+                st.markdown("### ⏰ Time")
                 st.write(row[3])
 
                 st.markdown("---")
