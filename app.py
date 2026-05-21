@@ -12,12 +12,13 @@ st.set_page_config(
     layout="centered"
 )
 
-# ================= DATABASE =================
+# ================= DATABASE CONNECTION =================
 
 conn = sqlite3.connect('users.db', check_same_thread=False)
 c = conn.cursor()
 
-# User Table
+# ================= CREATE TABLES =================
+
 c.execute('''
 CREATE TABLE IF NOT EXISTS users(
     username TEXT,
@@ -25,7 +26,6 @@ CREATE TABLE IF NOT EXISTS users(
 )
 ''')
 
-# History Table
 c.execute('''
 CREATE TABLE IF NOT EXISTS history(
     username TEXT,
@@ -42,7 +42,7 @@ conn.commit()
 model = pickle.load(open('phishing_mnb.pkl', 'rb'))
 vectorizer = pickle.load(open('vectorizer.pkl', 'rb'))
 
-# ================= PREPROCESSING =================
+# ================= PREPROCESSING FUNCTION =================
 
 def preprocess_url(url):
 
@@ -66,14 +66,14 @@ if 'logged_in' not in st.session_state:
 if 'username' not in st.session_state:
     st.session_state.username = ""
 
-# ================= SIDEBAR =================
+# ================= SIDEBAR MENU =================
 
 menu = st.sidebar.selectbox(
     "Navigation Menu",
     ["Login", "Register", "Detection System", "History"]
 )
 
-# ================= REGISTER =================
+# ================= REGISTER PAGE =================
 
 if menu == "Register":
 
@@ -97,7 +97,7 @@ if menu == "Register":
 
         st.success("Registration Successful")
 
-# ================= LOGIN =================
+# ================= LOGIN PAGE =================
 
 elif menu == "Login":
 
@@ -150,8 +150,9 @@ elif menu == "Detection System":
 
             prediction_result = model.predict(vector_input)[0]
 
-            # IMPORTANT FIX
-            if prediction_result == 'good':
+            # ================= FIXED LABEL LOGIC =================
+
+            if prediction_result == 'bad':
 
                 prediction = "✅ Legitimate Website"
 
@@ -163,7 +164,8 @@ elif menu == "Detection System":
 
                 st.error(prediction)
 
-            # Save History
+            # ================= SAVE HISTORY =================
+
             c.execute(
                 "INSERT INTO history VALUES (?, ?, ?, ?)",
                 (
@@ -180,7 +182,7 @@ elif menu == "Detection System":
 
         st.warning("Please Login First")
 
-# ================= HISTORY =================
+# ================= HISTORY PAGE =================
 
 elif menu == "History":
 
