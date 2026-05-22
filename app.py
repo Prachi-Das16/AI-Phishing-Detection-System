@@ -5,7 +5,7 @@ import time
 
 # ================= PAGE CONFIG =================
 st.set_page_config(
-    page_title="AI Shield - Phishing Detection",
+    page_title="AI Phishing Detection System",
     page_icon="🛡️",
     layout="wide"
 )
@@ -13,6 +13,13 @@ st.set_page_config(
 # ================= LOAD MODEL =================
 model = pickle.load(open("phishing_mnb.pkl", "rb"))
 vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
+
+# ================= SESSION =================
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+if "show_auth" not in st.session_state:
+    st.session_state.show_auth = False
 
 # ================= CUSTOM CSS =================
 st.markdown("""
@@ -28,289 +35,290 @@ html, body, [class*="css"]{
     font-family:'Poppins',sans-serif;
 }
 
-/* REMOVE CODE BLOCK STYLE */
-code{
-    display:none !important;
+/* Remove streamlit padding */
+.block-container{
+    padding-top:0rem;
+    padding-bottom:2rem;
 }
 
-pre{
-    display:none !important;
-}
+/* ================= NAVBAR ================= */
 
-/* NAVBAR */
 .navbar{
     position:fixed;
     top:0;
     left:0;
-    width:100%;
+    right:0;
     z-index:999;
-    background:rgba(5,8,22,0.75);
-    backdrop-filter:blur(12px);
-    border-bottom:1px solid rgba(0,217,255,0.15);
-    padding:18px 40px;
-}
-
-.nav-container{
+    padding:20px 60px;
     display:flex;
     justify-content:space-between;
     align-items:center;
+    background:rgba(5,8,22,0.85);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(0,217,255,0.12);
 }
 
 .logo{
-    font-size:42px;
-    font-weight:700;
+    font-size:30px;
+    font-weight:800;
     color:#00D9FF;
 }
 
 .nav-links{
     display:flex;
-    gap:40px;
     align-items:center;
+    gap:28px;
 }
 
 .nav-links a{
     color:white;
     text-decoration:none;
-    font-size:18px;
+    font-size:17px;
+    transition:0.3s;
+}
+
+.nav-links a:hover{
+    color:#00D9FF;
 }
 
 .cta-btn{
-    padding:12px 24px;
-    border:2px solid #00D9FF;
+    border:1px solid #00D9FF;
+    padding:10px 20px;
     border-radius:14px;
     color:#00D9FF !important;
 }
 
-/* HERO */
+/* ================= HERO ================= */
+
 .hero{
-    padding-top:150px;
-    padding-bottom:30px;
+    padding-top:130px;
+    padding-bottom:20px;
 }
 
 .hero-title{
-    font-size:74px;
+    font-size:72px;
     font-weight:800;
     line-height:1.1;
-    margin-bottom:18px;
+    margin-bottom:25px;
 }
 
 .glow{
     color:#00D9FF;
-    text-shadow:0 0 8px rgba(0,217,255,0.4);
 }
 
 .hero-desc{
-    font-size:24px;
+    font-size:22px;
     color:#B8C1EC;
-    max-width:1100px;
+    max-width:900px;
     line-height:1.7;
+    margin-bottom:30px;
+}
+
+/* ================= SCANNER ================= */
+
+.scan-box{
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(0,217,255,0.20);
+    border-radius:30px;
+    padding:35px;
+    margin-top:20px;
     margin-bottom:40px;
+    backdrop-filter:blur(12px);
 }
 
-/* INPUT */
-.stTextInput > div > div > input{
-    background:#161B2D !important;
-    color:white !important;
+.stTextInput input{
+    background:#151A2E !important;
     border:2px solid #00D9FF !important;
-    border-radius:20px !important;
-    padding:18px 20px !important;
-    font-size:24px !important;
-    min-height:70px !important;
-    box-sizing:border-box !important;
+    border-radius:16px !important;
+    color:white !important;
+    font-size:20px !important;
+    padding:18px !important;
 }
 
-/* BUTTONS */
 .stButton button{
     background:transparent !important;
-    color:#00D9FF !important;
     border:2px solid #00D9FF !important;
+    color:#00D9FF !important;
     border-radius:14px !important;
-    padding:14px 30px !important;
-    font-size:20px !important;
-    transition:0.3s !important;
+    padding:12px 28px !important;
+    font-size:18px !important;
+    font-weight:700 !important;
+    transition:0.3s;
 }
 
 .stButton button:hover{
-    box-shadow:0 0 15px #00D9FF;
+    box-shadow:0 0 20px rgba(0,217,255,0.35);
     transform:translateY(-2px);
 }
 
-/* RESULT */
-.phishing-card{
-    background:rgba(255,59,92,0.10);
-    border:1px solid #FF3B5C;
-    border-radius:30px;
-    padding:40px;
-    margin-top:40px;
-}
+/* ================= RESULT ================= */
 
 .safe-card{
-    background:rgba(0,255,157,0.10);
+    background:rgba(0,255,157,0.08);
     border:1px solid #00FF9D;
-    border-radius:30px;
-    padding:40px;
-    margin-top:40px;
+    border-radius:24px;
+    padding:30px;
+    margin-top:25px;
+}
+
+.phishing-card{
+    background:rgba(255,59,92,0.08);
+    border:1px solid #FF3B5C;
+    border-radius:24px;
+    padding:30px;
+    margin-top:25px;
 }
 
 .result-title{
-    font-size:42px;
-    font-weight:700;
-    margin-bottom:20px;
+    font-size:32px;
+    font-weight:800;
 }
 
 .result-desc{
-    font-size:24px;
-    line-height:1.8;
+    font-size:18px;
+    margin-top:15px;
+    line-height:1.7;
 }
 
-/* THREAT CIRCLE */
+/* ================= THREAT METER ================= */
+
+.threat-wrapper{
+    display:flex;
+    justify-content:center;
+    margin-top:30px;
+    margin-bottom:20px;
+}
+
 .threat-circle{
-    width:240px;
-    height:240px;
+    width:220px;
+    height:220px;
     border-radius:50%;
-    background:
-    radial-gradient(closest-side,#050816 79%,transparent 80% 100%),
-    conic-gradient(#FF3B5C var(--percentage),#1A1F2E 0);
     display:flex;
     align-items:center;
     justify-content:center;
+    font-size:34px;
+    font-weight:800;
+    color:white;
+    background:
+    conic-gradient(#FF3B5C var(--percentage),
+    rgba(255,255,255,0.08) 0);
 }
 
 .inner-circle{
-    text-align:center;
-    font-size:48px;
-    font-weight:700;
+    width:170px;
+    height:170px;
+    border-radius:50%;
+    background:#050816;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
 }
 
-/* STATS */
-.stats-section{
-    margin-top:60px;
-    margin-bottom:40px;
-}
+/* ================= STATS ================= */
 
-.stats-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:30px;
-}
-
-.stat-card{
-    background:rgba(255,255,255,0.04);
-    border:1px solid rgba(0,217,255,0.25);
-    border-radius:24px;
-    padding:35px;
-}
-
-.stat-number{
-    font-size:56px;
-    font-weight:800;
-    color:#00FF9D;
-}
-
-.stat-label{
-    font-size:22px;
-    margin-top:18px;
-    color:#B8C1EC;
-}
-
-/* FEATURES */
-.section-title{
-    font-size:54px;
-    font-weight:700;
-    margin-top:25px;
+.stats-title{
+    margin-top:10px;
     margin-bottom:25px;
 }
 
-.feature-card{
-    background:rgba(255,255,255,0.04);
-    border:1px solid rgba(0,217,255,0.25);
+.stat-card{
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(0,217,255,0.15);
     border-radius:26px;
     padding:35px;
+    min-height:200px;
     transition:0.3s;
-    height:100%;
+}
+
+.stat-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 0 22px rgba(0,217,255,0.20);
+}
+
+.stat-number{
+    font-size:52px;
+    color:#00FF9D;
+    font-weight:800;
+}
+
+.stat-label{
+    color:#B8C1EC;
+    font-size:20px;
+    margin-top:14px;
+}
+
+/* ================= FEATURES ================= */
+
+.features-heading{
+    padding-top:10px;
+}
+
+.feature-card{
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(0,217,255,0.15);
+    border-radius:24px;
+    padding:28px;
+    min-height:180px;
+    transition:0.3s;
 }
 
 .feature-card:hover{
     transform:translateY(-5px);
-    box-shadow:0 0 25px rgba(0,217,255,0.15);
+    box-shadow:0 0 24px rgba(0,217,255,0.22);
 }
 
 .feature-title{
-    font-size:32px;
+    font-size:24px;
     font-weight:700;
-    margin-bottom:18px;
+    margin-top:15px;
 }
 
 .feature-desc{
-    font-size:21px;
     color:#B8C1EC;
+    margin-top:10px;
     line-height:1.7;
 }
 
-/* HOW IT WORKS */
-.steps{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:25px;
-}
+/* ================= FOOTER ================= */
 
-.step-card{
-    background:#12233A;
-    border-radius:20px;
-    padding:28px;
-    border:1px solid rgba(0,217,255,0.15);
-}
-
-.step-title{
-    font-size:28px;
-    font-weight:700;
-    color:#00D9FF;
-}
-
-/* FOOTER */
 .footer{
+    margin-top:70px;
     text-align:center;
-    margin-top:80px;
-    padding:30px;
-    color:#B8C1EC;
+    padding:28px;
     border-top:1px solid rgba(255,255,255,0.08);
-    font-size:20px;
+    color:#B8C1EC;
+    font-size:17px;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
 # ================= NAVBAR =================
-navbar_html = """
+st.markdown("""
 <div class="navbar">
 
-    <div class="nav-container">
+<div class="logo">
+🛡️ AI Shield
+</div>
 
-        <div class="logo">
-            🛡️ AI Shield
-        </div>
-
-        <div class="nav-links">
-            <a href="#">Home</a>
-            <a href="#dashboard">Dashboard</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
-            <a class="cta-btn" href="#scanner">Start Detection</a>
-        </div>
-
-    </div>
+<div class="nav-links">
+<a href="#">Home</a>
+<a href="#">Dashboard</a>
+<a href="#">About</a>
+<a href="#">Contact</a>
+<a class="cta-btn" href="#">Start Detection</a>
+</div>
 
 </div>
-"""
-
-st.markdown(navbar_html, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
 # ================= HERO =================
-hero_html = """
+st.markdown("""
 <div class="hero">
 
 <div class="hero-title">
-AI-Powered <span class="glow">Phishing</span> Detection System
+AI-Powered <span class="glow">Phishing Detection</span> System
 </div>
 
 <div class="hero-desc">
@@ -319,102 +327,144 @@ threat scoring, real-time monitoring, and secure browsing insights.
 </div>
 
 </div>
-"""
-
-st.markdown(hero_html, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
 # ================= SCANNER =================
-st.markdown('<div id="scanner"></div>', unsafe_allow_html=True)
+st.markdown("""
+<div class="scan-box">
+""", unsafe_allow_html=True)
 
-url = st.text_input("", placeholder="Enter suspicious URL here...")
+url = st.text_input(
+    "",
+    placeholder="Enter suspicious URL here..."
+)
 
-c1, c2, c3 = st.columns([1,1,6])
+col1, col2, col3 = st.columns([1,1,5])
 
-with c1:
-    scan = st.button("🚀 Scan URL")
+scan = False
 
-with c2:
-    clear = st.button("🧹 Clear URL")
+with col1:
+    if st.button("🚀 Scan URL"):
+        if not st.session_state.logged_in:
+            st.session_state.show_auth = True
+        else:
+            scan = True
+
+with col2:
+    if st.button("🧹 Clear URL"):
+        st.rerun()
+
+# ================= LOGIN =================
+if st.session_state.show_auth and not st.session_state.logged_in:
+
+    st.markdown("## 🔐 Login / Signup")
+
+    option = st.radio(
+        "",
+        ["Login", "Signup"],
+        horizontal=True
+    )
+
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+
+    if st.button(option):
+        if username and password:
+            st.session_state.logged_in = True
+            st.success(f"{option} Successful!")
+            st.rerun()
 
 # ================= DETECTION =================
 if scan and url:
 
     time.sleep(1)
 
-    suspicious_keywords = [
-        "goog1e",
-        "paypa1",
-        "secure-login",
-        "verify-account",
-        ".xyz",
-        "update-security",
-        "free-bonus",
-        "login"
+    url_lower = url.lower()
+
+    phishing_keywords = [
+        "login",
+        "verify",
+        "security",
+        "update",
+        "bank",
+        "paypal",
+        "bonus",
+        "gift",
+        "urgent",
+        "account"
     ]
 
-    phishing_detected = any(word in url.lower() for word in suspicious_keywords)
+    fake_brands = [
+        "goog1e",
+        "paypa1",
+        "faceb00k",
+        "amaz0n",
+        "micr0soft"
+    ]
 
-    if phishing_detected:
+    suspicious = False
 
-        threat_score = random.randint(82,98)
+    for word in phishing_keywords:
+        if word in url_lower:
+            suspicious = True
 
-        phishing_html = f"""
+    for brand in fake_brands:
+        if brand in url_lower:
+            suspicious = True
+
+    vector_input = vectorizer.transform([url])
+    prediction = model.predict(vector_input)[0]
+
+    if suspicious:
+        prediction = 1
+
+    # ================= PHISHING =================
+    if prediction == 1:
+
+        threat_score = random.randint(76,96)
+
+        st.markdown(f"""
         <div class="phishing-card">
 
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:30px;">
+        <div class="result-title">
+        ⚠️ Phishing Website Detected
+        </div>
 
-            <div style="flex:1;min-width:300px;">
+        <div class="result-desc">
+        Severity Level: High Risk <br>
+        Threat Level: {threat_score}% <br><br>
 
-                <div class="result-title">
-                ⚠️ Phishing Website Detected
-                </div>
+        Suspicious indicators identified:
+        <ul>
+        <li>Fake brand impersonation detected</li>
+        <li>Credential phishing behavior observed</li>
+        <li>Unsafe domain characteristics found</li>
+        </ul>
 
-                <div class="result-desc">
+        </div>
 
-                Severity Level: High Risk <br>
-                Threat Level: {threat_score}% <br><br>
+        </div>
+        """, unsafe_allow_html=True)
 
-                Suspicious indicators identified:
-                <ul>
-                <li>Fake brand impersonation detected</li>
-                <li>Credential phishing behavior observed</li>
-                <li>Unsafe domain characteristics found</li>
-                </ul>
-
-                </div>
-
-            </div>
-
-            <div style="display:flex;justify-content:center;align-items:center;">
-
-                <div class="threat-circle" style="--percentage:{threat_score}%">
-
-                    <div class="inner-circle">
-
-                        <div>{threat_score}%</div>
-
-                        <div style="font-size:16px;color:#B8C1EC;">
-                        Threat Score
-                        </div>
-
+        st.markdown(f"""
+        <div class="threat-wrapper">
+            <div class="threat-circle" style="--percentage:{threat_score}%">
+                <div class="inner-circle">
+                    <div>{threat_score}%</div>
+                    <div style="font-size:16px;color:#B8C1EC;">
+                    Threat Score
                     </div>
-
                 </div>
-
             </div>
-
         </div>
+        """, unsafe_allow_html=True)
 
-        </div>
-        """
-
-        st.markdown(phishing_html, unsafe_allow_html=True)
-
+    # ================= SAFE =================
     else:
 
-        safe_score = random.randint(75,95)
+        safe_score = random.randint(70,92)
 
-        safe_html = f"""
+        st.markdown(f"""
         <div class="safe-card">
 
         <div class="result-title">
@@ -422,140 +472,152 @@ if scan and url:
         </div>
 
         <div class="result-desc">
-
+        Security Status: Safe <br>
         Safe Probability: {safe_score}% <br><br>
 
-        Website appears secure and trusted.<br>
-        No major phishing indicators detected.
-
+        No phishing indicators detected.
+        Website appears safe for browsing.
         </div>
 
         </div>
-        """
+        """, unsafe_allow_html=True)
 
-        st.markdown(safe_html, unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="threat-wrapper">
+            <div class="threat-circle" style="--percentage:{safe_score}%; background:
+            conic-gradient(#00FF9D var(--percentage),
+            rgba(255,255,255,0.08) 0);">
+                <div class="inner-circle">
+                    <div>{safe_score}%</div>
+                    <div style="font-size:16px;color:#B8C1EC;">
+                    Safe Score
+                    </div>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-# ================= STATS =================
-stats_html = """
-<div class="stats-section" id="dashboard">
+st.markdown("</div>", unsafe_allow_html=True)
 
-<div class="stats-grid">
+# ================= SECURITY STATS =================
+st.markdown("""
+<div class="stats-title"></div>
+""", unsafe_allow_html=True)
 
-<div class="stat-card">
-<div class="stat-number">99.8%</div>
-<div class="stat-label">Detection Accuracy</div>
-</div>
+c1,c2,c3,c4 = st.columns(4)
 
-<div class="stat-card">
-<div class="stat-number">&lt;1min</div>
-<div class="stat-label">Response Time</div>
-</div>
+with c1:
+    st.markdown("""
+    <div class="stat-card">
+        <div class="stat-number">99.8%</div>
+        <div class="stat-label">
+        Detection Accuracy
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-<div class="stat-card">
-<div class="stat-number">24/7</div>
-<div class="stat-label">Monitoring</div>
-</div>
+with c2:
+    st.markdown("""
+    <div class="stat-card">
+        <div class="stat-number">&lt;1min</div>
+        <div class="stat-label">
+        Response Time
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-<div class="stat-card">
-<div class="stat-number">99.9%</div>
-<div class="stat-label">Uptime SLA</div>
-</div>
+with c3:
+    st.markdown("""
+    <div class="stat-card">
+        <div class="stat-number">24/7</div>
+        <div class="stat-label">
+        Monitoring
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-</div>
-
-</div>
-"""
-
-st.markdown(stats_html, unsafe_allow_html=True)
+with c4:
+    st.markdown("""
+    <div class="stat-card">
+        <div class="stat-number">99.9%</div>
+        <div class="stat-label">
+        Uptime SLA
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 # ================= FEATURES =================
 st.markdown("""
-<div class="section-title">
-🚀 Features
-</div>
+<div class="features-heading"></div>
 """, unsafe_allow_html=True)
 
-f1, f2, f3 = st.columns(3)
+st.markdown("## 🚀 Features")
+
+f1,f2,f3 = st.columns(3)
 
 with f1:
     st.markdown("""
     <div class="feature-card">
+        <div class="feature-title">
+        🤖 AI Detection
+        </div>
 
-    <div class="feature-title">
-    🤖 AI Detection
-    </div>
-
-    <div class="feature-desc">
-    Machine learning based phishing detection with intelligent URL analysis.
-    </div>
-
+        <div class="feature-desc">
+        Machine learning based phishing detection with intelligent URL analysis.
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
 with f2:
     st.markdown("""
     <div class="feature-card">
+        <div class="feature-title">
+        ⚡ Real-Time Detection
+        </div>
 
-    <div class="feature-title">
-    ⚡ Real-Time Detection
-    </div>
-
-    <div class="feature-desc">
-    Instant cyber threat analysis with fast response and live monitoring.
-    </div>
-
+        <div class="feature-desc">
+        Instant cyber threat analysis with fast response monitoring.
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
 with f3:
     st.markdown("""
     <div class="feature-card">
+        <div class="feature-title">
+        🛡️ Secure Browsing
+        </div>
 
-    <div class="feature-title">
-    🛡️ Secure Browsing
-    </div>
-
-    <div class="feature-desc">
-    Protect users from phishing websites and malicious cyber attacks.
-    </div>
-
+        <div class="feature-desc">
+        Protect users from phishing websites and malicious cyber attacks.
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
 # ================= HOW IT WORKS =================
 st.markdown("""
-<div class="section-title">
-⚙️ How It Works
-</div>
+<div class="features-heading"></div>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-<div class="steps">
+st.markdown("## ⚙️ How It Works")
 
-<div class="step-card">
-<div class="step-title">1️⃣ Enter URL</div>
-</div>
+h1,h2,h3,h4 = st.columns(4)
 
-<div class="step-card">
-<div class="step-title">2️⃣ AI Analysis</div>
-</div>
+with h1:
+    st.info("1️⃣ Enter URL")
 
-<div class="step-card">
-<div class="step-title">3️⃣ Threat Scanning</div>
-</div>
+with h2:
+    st.info("2️⃣ AI Analysis")
 
-<div class="step-card">
-<div class="step-title">4️⃣ Detection Result</div>
-</div>
+with h3:
+    st.info("3️⃣ Threat Scanning")
 
-</div>
-""", unsafe_allow_html=True)
+with h4:
+    st.info("4️⃣ Detection Result")
 
 # ================= FOOTER =================
 st.markdown("""
-<div class="footer" id="contact">
-
+<div class="footer">
 Developed by Prachi Das
-
 </div>
 """, unsafe_allow_html=True)
