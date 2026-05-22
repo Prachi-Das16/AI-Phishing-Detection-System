@@ -348,8 +348,11 @@ st.markdown("""
 
 query_params = st.query_params
 
-current_page = st.query_params.get("page", "home")
+current_page = st.query_params.get("page", ["home"])
 
+if isinstance(current_page, list):
+    current_page = current_page[0]
+    
 if current_page == "home":
 
 
