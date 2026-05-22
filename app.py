@@ -334,7 +334,7 @@ st.markdown("""
 
 <div class="nav-links">
 <a href="#">Home</a>
-<a href="#dashboard">Dashboard</a>
+<a href="?page=dashboard">Dashboard</a>
 <a href="#">About</a>
 <a href="#">Contact</a>
 <a class="cta-btn" href="#scanner">Start Detection</a>
@@ -343,326 +343,345 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ================= HERO =================
-st.markdown("""
-<div class="hero">
+query_params = st.query_params
 
-<div class="hero-title">
-AI-Powered <span class="glow">Phishing Detection</span> System
-</div>
+current_page = query_params.get("page", "home")
 
-<div class="hero-desc">
-AI-powered phishing detection platform with intelligent URL analysis,
-threat scoring, real-time monitoring, and secure browsing insights.
-</div>
+if current_page == "home":
 
-</div>
-""", unsafe_allow_html=True)
 
-# ================= SCANNER =================
-st.markdown("""
-<div class="scan-box">
-""", unsafe_allow_html=True)
 
-url = st.text_input(
-    "",
-    placeholder="Enter suspicious URL here..."
-)
+    # ================= HERO =================
+    st.markdown("""
+    <div class="hero">
 
-col1, col2, col3 = st.columns([1,1,5])
+    <div class="hero-title">
+    AI-Powered <span class="glow">Phishing Detection</span> System
+    </div>
 
-scan = False
+    <div class="hero-desc">
+    AI-powered phishing detection platform with intelligent URL analysis,
+    threat scoring, real-time monitoring, and secure browsing insights.
+    </div>
 
-with col1:
-    if st.button("🚀 Scan URL"):
-        if not st.session_state.logged_in:
-            st.session_state.show_auth = True
-        else:
-            scan = True
+    </div>
+    """, unsafe_allow_html=True)
 
-with col2:
-    if st.button("🧹 Clear URL"):
-        st.rerun()
+    # ================= SCANNER =================
+    st.markdown("""
+    <div class="scan-box">
+    """, unsafe_allow_html=True)
 
-# ================= LOGIN =================
-if st.session_state.show_auth and not st.session_state.logged_in:
-
-    st.markdown("## 🔐 Login / Signup")
-
-    option = st.radio(
+    url = st.text_input(
         "",
-        ["Login", "Signup"],
-        horizontal=True
+        placeholder="Enter suspicious URL here..."
     )
 
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
+    col1, col2, col3 = st.columns([1,1,5])
 
-    if st.button(option):
-        if username and password:
-            st.session_state.logged_in = True
-            st.success(f"{option} Successful!")
+    scan = False
+
+    with col1:
+        if st.button("🚀 Scan URL"):
+            if not st.session_state.logged_in:
+                st.session_state.show_auth = True
+            else:
+                scan = True
+
+    with col2:
+        if st.button("🧹 Clear URL"):
             st.rerun()
 
-# ================= DETECTION =================
-if scan and url:
+    # ================= LOGIN =================
+    if st.session_state.show_auth and not st.session_state.logged_in:
 
-    time.sleep(1)
+        st.markdown("## 🔐 Login / Signup")
 
-    url_lower = url.lower()
+        option = st.radio(
+            "",
+            ["Login", "Signup"],
+            horizontal=True
+        )
 
-    phishing_keywords = [
-        "login",
-        "verify",
-        "security",
-        "update",
-        "bank",
-        "paypal",
-        "bonus",
-        "gift",
-        "urgent",
-        "account"
-    ]
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
 
-    fake_brands = [
-        "goog1e",
-        "paypa1",
-        "faceb00k",
-        "amaz0n",
-        "micr0soft"
-    ]
+        if st.button(option):
+            if username and password:
+                st.session_state.logged_in = True
+                st.success(f"{option} Successful!")
+                st.rerun()
 
-    suspicious = False
+    # ================= DETECTION =================
+    if scan and url:
 
-    for word in phishing_keywords:
-        if word in url_lower:
-            suspicious = True
+        time.sleep(1)
 
-    for brand in fake_brands:
-        if brand in url_lower:
-            suspicious = True
+        url_lower = url.lower()
 
-    vector_input = vectorizer.transform([url])
-    prediction = model.predict(vector_input)[0]
+        phishing_keywords = [
+            "login",
+            "verify",
+            "security",
+            "update",
+            "bank",
+            "paypal",
+            "bonus",
+            "gift",
+            "urgent",
+            "account"
+        ]
 
-    if suspicious:
-        prediction = 1
+        fake_brands = [
+            "goog1e",
+            "paypa1",
+            "faceb00k",
+            "amaz0n",
+            "micr0soft"
+        ]
 
-    # ================= PHISHING =================
-    if prediction == 1:
+        suspicious = False
 
-        threat_score = random.randint(76,96)
+        for word in phishing_keywords:
+            if word in url_lower:
+                suspicious = True
 
-        st.markdown(f"""
-<div class="phishing-card">
+        for brand in fake_brands:
+            if brand in url_lower:
+                suspicious = True
 
-<div style="flex:1; min-width:320px;">
+        vector_input = vectorizer.transform([url])
+        prediction = model.predict(vector_input)[0]
 
-<div class="result-title">
-⚠️ Phishing Website Detected
-</div>
+        if suspicious:
+            prediction = 1
 
-<div class="result-desc">
-Severity Level: High Risk <br>
-Threat Level: {threat_score}% <br><br>
+        # ================= PHISHING =================
+        if prediction == 1:
 
-Suspicious indicators identified:
-<ul>
-<li>Fake brand impersonation detected</li>
-<li>Credential phishing behavior observed</li>
-<li>Unsafe domain characteristics found</li>
-</ul>
-</div>
+            threat_score = random.randint(76,96)
 
-</div>
+            st.markdown(f"""
+    <div class="phishing-card">
 
-<div style="display:flex;justify-content:center;align-items:center;">
+    <div style="flex:1; min-width:320px;">
 
-<div class="threat-circle" style="--percentage:{threat_score}%">
+    <div class="result-title">
+    ⚠️ Phishing Website Detected
+    </div>
 
-<div class="inner-circle">
+    <div class="result-desc">
+    Severity Level: High Risk <br>
+    Threat Level: {threat_score}% <br><br>
 
-<div>{threat_score}%</div>
+    Suspicious indicators identified:
+    <ul>
+    <li>Fake brand impersonation detected</li>
+    <li>Credential phishing behavior observed</li>
+    <li>Unsafe domain characteristics found</li>
+    </ul>
+    </div>
 
-<div style="font-size:16px;color:#B8C1EC;">
-Threat Score
-</div>
+    </div>
 
-</div>
+    <div style="display:flex;justify-content:center;align-items:center;">
 
-</div>
+    <div class="threat-circle" style="--percentage:{threat_score}%">
 
-</div>
+    <div class="inner-circle">
 
-</div>
-""", unsafe_allow_html=True)
+    <div>{threat_score}%</div>
+
+    <div style="font-size:16px;color:#B8C1EC;">
+    Threat Score
+    </div>
+
+    </div>
+
+    </div>
+
+    </div>
+
+    </div>
+    """, unsafe_allow_html=True)
         
-    # ================= SAFE =================
-    else:
+        # ================= SAFE =================
+        else:
 
-        safe_score = random.randint(70,92)
+            safe_score = random.randint(70,92)
 
-        st.markdown(f"""
-        <div class="safe-card">
+             st.markdown(f"""
+            <div class="safe-card">
 
-        <div class="result-title">
-        ✅ Legitimate Website
-        </div>
+            <div class="result-title">
+            ✅ Legitimate Website
+            </div>
 
-        <div class="result-desc">
-        Security Status: Safe <br>
-        Safe Probability: {safe_score}% <br><br>
+            <div class="result-desc">
+            Security Status: Safe <br>
+            Safe Probability: {safe_score}% <br><br>
 
-        No phishing indicators detected.
-        Website appears safe for browsing.
-        </div>
+            No phishing indicators detected.
+            Website appears safe for browsing.
+            </div>
 
-        </div>
-        """, unsafe_allow_html=True)
+            </div>
+            """, unsafe_allow_html=True)
 
-        st.markdown(f"""
-        <div class="threat-wrapper">
-            <div class="threat-circle" style="--percentage:{safe_score}%; background:
-            conic-gradient(#00FF9D var(--percentage),
-            rgba(255,255,255,0.08) 0);">
-                <div class="inner-circle">
-                    <div>{safe_score}%</div>
-                    <div style="font-size:16px;color:#B8C1EC;">
-                    Safe Score
+            st.markdown(f"""
+            <div class="threat-wrapper">
+                <div class="threat-circle" style="--percentage:{safe_score}%; background:
+                conic-gradient(#00FF9D var(--percentage),
+                rgba(255,255,255,0.08) 0);">
+                    <div class="inner-circle">
+                        <div>{safe_score}%</div>
+                        <div style="font-size:16px;color:#B8C1EC;">
+                        Safe Score
+                        </div>
                     </div>
                 </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    # ================= SECURITY STATS =================
+    st.markdown("""
+    <div class="stats-title"></div>
+    """, unsafe_allow_html=True)
+
+    c1,c2,c3,c4 = st.columns(4)
+
+    with c1:
+        st.markdown("""
+        <div class="stat-card">
+              <div class="stat-number">99.8%</div>
+              <div class="stat-label">
+            Detection Accuracy
+            </div>
+         </div>
+        """, unsafe_allow_html=True)
+
+    with c2:
+        st.markdown("""
+        <div class="stat-card">
+            <div class="stat-number">&lt;1min</div>
+            <div class="stat-label">
+            Response Time
             </div>
         </div>
         """, unsafe_allow_html=True)
 
-st.markdown("</div>", unsafe_allow_html=True)
+    with c3:
+        st.markdown("""
+        <div class="stat-card">
+            <div class="stat-number">24/7</div>
+              <div class="stat-label">
+            Monitoring
+            </div>
+         </div>
+        """, unsafe_allow_html=True)
 
-# ================= SECURITY STATS =================
-st.markdown("""
-<div class="stats-title"></div>
-""", unsafe_allow_html=True)
-
-c1,c2,c3,c4 = st.columns(4)
-
-with c1:
-    st.markdown("""
-    <div class="stat-card">
-        <div class="stat-number">99.8%</div>
-        <div class="stat-label">
-        Detection Accuracy
+    with c4:
+        st.markdown("""
+        <div class="stat-card">
+             <div class="stat-number">99.9%</div>
+            <div class="stat-label">
+            Uptime SLA
+            </div>
         </div>
+        """, unsafe_allow_html=True)
+
+    # ================= FEATURES =================
+    st.markdown("""
+    <div class="section-title">
+    🚀 Features
+    </div>
+
+    <div class="feature-grid">
+
+    <div class="feature-card">
+    <div class="feature-title">🤖 AI Detection</div>
+    <div class="feature-desc">
+    Machine learning based phishing detection with intelligent URL analysis.
+    </div>
+    </div>
+
+    <div class="feature-card">
+    <div class="feature-title">⚡ Real-Time Detection</div>
+    <div class="feature-desc">
+    Instant cyber threat analysis with fast response and live monitoring.
+    </div>
+    </div>
+
+    <div class="feature-card">
+    <div class="feature-title">🛡️ Secure Browsing</div>
+    <div class="feature-desc">
+    Protect users from phishing websites and malicious cyber attacks.
+    </div>
+    </div>
+
     </div>
     """, unsafe_allow_html=True)
 
-with c2:
+    # ================= HOW IT WORKS =================
     st.markdown("""
-    <div class="stat-card">
-        <div class="stat-number">&lt;1min</div>
-        <div class="stat-label">
-        Response Time
-        </div>
+    <div class="features-heading"></div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("## ⚙️ How It Works")
+
+    h1,h2,h3,h4 = st.columns(4)
+
+    with h1:
+        st.info("1️⃣ Enter URL")
+
+    with h2:
+        st.info("2️⃣ AI Analysis")
+
+    with h3:
+        st.info("3️⃣ Threat Scanning")
+
+    with h4:
+        st.info("4️⃣ Detection Result")
+
+# ================= DASHBOARD PAGE =================
+
+if current_page == "dashboard":
+
+    st.markdown("""
+    <div class="hero">
+
+    <div class="hero-title">
+    📊 Dashboard & History
+    </div>
+
+    <div class="hero-desc">
+    Monitor phishing detections, scan history,
+    threat analysis and security logs.
+    </div>
+
     </div>
     """, unsafe_allow_html=True)
 
-with c3:
-    st.markdown("""
-    <div class="stat-card">
-        <div class="stat-number">24/7</div>
-        <div class="stat-label">
-        Monitoring
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    if st.session_state.logged_in:
 
-with c4:
-    st.markdown("""
-    <div class="stat-card">
-        <div class="stat-number">99.9%</div>
-        <div class="stat-label">
-        Uptime SLA
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+        dashboard_data = [
+            ("google.com", "Legitimate Website", "2026-08-22 11:12"),
+            ("goog1e.com", "Phishing Website", "2026-08-22 11:14"),
+            ("github.com", "Legitimate Website", "2026-08-22 11:17"),
+            ("paypal-security.xyz", "Phishing Website", "2026-08-22 11:19")
+        ]
 
-# ================= FEATURES =================
-st.markdown("""
-<div class="section-title">
-🚀 Features
-</div>
+        st.dataframe(
+            dashboard_data,
+            use_container_width=True
+        )
 
-<div class="feature-grid">
+    else:
 
-<div class="feature-card">
-<div class="feature-title">🤖 AI Detection</div>
-<div class="feature-desc">
-Machine learning based phishing detection with intelligent URL analysis.
-</div>
-</div>
-
-<div class="feature-card">
-<div class="feature-title">⚡ Real-Time Detection</div>
-<div class="feature-desc">
-Instant cyber threat analysis with fast response and live monitoring.
-</div>
-</div>
-
-<div class="feature-card">
-<div class="feature-title">🛡️ Secure Browsing</div>
-<div class="feature-desc">
-Protect users from phishing websites and malicious cyber attacks.
-</div>
-</div>
-
-</div>
-""", unsafe_allow_html=True)
-
-# ================= HOW IT WORKS =================
-st.markdown("""
-<div class="features-heading"></div>
-""", unsafe_allow_html=True)
-
-st.markdown("## ⚙️ How It Works")
-
-h1,h2,h3,h4 = st.columns(4)
-
-with h1:
-    st.info("1️⃣ Enter URL")
-
-with h2:
-    st.info("2️⃣ AI Analysis")
-
-with h3:
-    st.info("3️⃣ Threat Scanning")
-
-with h4:
-    st.info("4️⃣ Detection Result")
-
-# ================= DASHBOARD =================
-
-st.markdown("""
-<div id="dashboard" class="section-title">
-📊 Dashboard Logs & History
-</div>
-""", unsafe_allow_html=True)
-
-if st.session_state.logged_in:
-
-    dashboard_data = [
-        ("google.com", "Legitimate Website", "2026-08-22 11:12"),
-        ("goog1e.com", "Phishing Website", "2026-08-22 11:14"),
-        ("github.com", "Legitimate Website", "2026-08-22 11:17"),
-        ("paypal-security.xyz", "Phishing Website", "2026-08-22 11:19")
-    ]
-
-    st.dataframe(
-        dashboard_data,
-        use_container_width=True
-    )
-
-else:
-
-    st.warning("Please Login First to View Dashboard Logs")
-
+        st.warning("Please Login First")
+        
 # ================= FOOTER =================
 st.markdown("""
 <div class="footer">
