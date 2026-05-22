@@ -19,14 +19,16 @@ vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
-# ================= CSS =================
+# ================= CUSTOM CSS =================
 st.markdown("""
 <style>
 
-#MainMenu{visibility:hidden;}
-footer{visibility:hidden;}
-header{visibility:hidden;}
+/* HIDE STREAMLIT DEFAULTS */
+#MainMenu {visibility:hidden;}
+footer {visibility:hidden;}
+header {visibility:hidden;}
 
+/* GLOBAL */
 html, body, [class*="css"]{
     background:#050816;
     color:white;
@@ -34,45 +36,44 @@ html, body, [class*="css"]{
 }
 
 /* REMOVE CODE BLOCKS */
-pre, code{
+code, pre {
     display:none !important;
 }
 
 /* NAVBAR */
-.navbar{
+.custom-navbar{
     position:fixed;
     top:0;
     left:0;
     width:100%;
-    z-index:999;
-    background:rgba(5,8,22,0.8);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid rgba(0,217,255,0.15);
-    padding:18px 60px;
-}
-
-.nav-inner{
+    height:85px;
+    background:rgba(5,8,22,0.96);
     display:flex;
     justify-content:space-between;
     align-items:center;
+    padding:0 60px;
+    z-index:999999;
+    border-bottom:1px solid rgba(0,217,255,0.2);
+    backdrop-filter:blur(10px);
 }
 
 .logo{
-    font-size:28px;
+    font-size:36px;
     font-weight:700;
     color:#00D9FF;
 }
 
 .nav-links{
     display:flex;
-    gap:35px;
     align-items:center;
+    gap:35px;
 }
 
 .nav-links a{
     color:white;
     text-decoration:none;
     font-size:18px;
+    font-weight:500;
 }
 
 .start-btn{
@@ -84,14 +85,13 @@ pre, code{
 
 /* HERO */
 .hero{
-    padding-top:140px;
+    padding-top:150px;
 }
 
 .hero-title{
-    font-size:78px;
+    font-size:90px;
     font-weight:800;
     line-height:1.1;
-    margin-bottom:20px;
 }
 
 .glow{
@@ -99,27 +99,31 @@ pre, code{
 }
 
 .hero-desc{
+    font-size:28px;
     color:#B8C1EC;
-    font-size:24px;
-    line-height:1.7;
-    max-width:1100px;
-    margin-bottom:45px;
+    max-width:1200px;
+    line-height:1.8;
+    margin-top:20px;
 }
 
 /* INPUT */
+.stTextInput{
+    margin-top:40px !important;
+}
+
 .stTextInput > div > div > input{
     background:#151A2D !important;
     color:white !important;
     border:2px solid #00D9FF !important;
     border-radius:18px !important;
+    padding:20px !important;
+    height:70px !important;
     font-size:22px !important;
-    padding:16px 20px !important;
-    height:65px !important;
     box-sizing:border-box !important;
 }
 
 /* BUTTONS */
-.stButton button{
+.stButton > button{
     background:transparent !important;
     border:2px solid #00D9FF !important;
     color:#00D9FF !important;
@@ -128,43 +132,43 @@ pre, code{
     font-size:20px !important;
 }
 
-.stButton button:hover{
-    box-shadow:0 0 15px rgba(0,217,255,0.5);
+.stButton > button:hover{
+    box-shadow:0 0 12px rgba(0,217,255,0.5);
 }
 
 /* RESULT */
-.result-card{
-    margin-top:40px;
+.result-box{
+    margin-top:45px;
     border-radius:28px;
     padding:40px;
 }
 
-.safe{
+.safe-box{
     background:rgba(0,255,157,0.08);
     border:1px solid #00FF9D;
 }
 
-.danger{
+.danger-box{
     background:rgba(255,59,92,0.08);
     border:1px solid #FF3B5C;
 }
 
 .result-title{
-    font-size:46px;
+    font-size:50px;
     font-weight:700;
-    margin-bottom:20px;
 }
 
 .result-text{
     font-size:24px;
     line-height:1.8;
+    margin-top:18px;
 }
 
 /* THREAT CIRCLE */
 .circle-wrap{
     display:flex;
     justify-content:center;
-    margin-top:30px;
+    margin-top:25px;
 }
 
 .threat-circle{
@@ -175,8 +179,8 @@ pre, code{
     radial-gradient(closest-side,#050816 79%,transparent 80% 100%),
     conic-gradient(#FF3B5C var(--percentage), #1B2130 0);
     display:flex;
-    justify-content:center;
     align-items:center;
+    justify-content:center;
 }
 
 .inner-circle{
@@ -189,8 +193,31 @@ pre, code{
 }
 
 .inner-circle p{
-    color:#B8C1EC;
     font-size:18px;
+    color:#B8C1EC;
+}
+
+/* DASHBOARD */
+.dashboard-box{
+    margin-top:70px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(0,217,255,0.15);
+    border-radius:28px;
+    padding:40px;
+}
+
+.dashboard-title{
+    font-size:54px;
+    font-weight:700;
+    margin-bottom:30px;
+}
+
+.log-item{
+    background:#0B1630;
+    padding:22px;
+    border-radius:16px;
+    margin-bottom:18px;
+    font-size:22px;
 }
 
 /* STATS */
@@ -215,17 +242,17 @@ pre, code{
 }
 
 .stat-label{
-    margin-top:18px;
     font-size:22px;
+    margin-top:16px;
     color:#B8C1EC;
 }
 
-/* SECTION */
+/* SECTIONS */
 .section-title{
-    font-size:54px;
+    font-size:56px;
     font-weight:700;
-    margin-top:25px;
-    margin-bottom:25px;
+    margin-top:90px;
+    margin-bottom:30px;
 }
 
 /* FEATURES */
@@ -237,7 +264,7 @@ pre, code{
 
 .feature-card{
     background:rgba(255,255,255,0.04);
-    border:1px solid rgba(0,217,255,0.2);
+    border:1px solid rgba(0,217,255,0.18);
     border-radius:24px;
     padding:35px;
 }
@@ -249,13 +276,13 @@ pre, code{
 }
 
 .feature-desc{
-    color:#B8C1EC;
     font-size:20px;
+    color:#B8C1EC;
     line-height:1.7;
 }
 
-/* STEPS */
-.steps{
+/* HOW IT WORKS */
+.steps-grid{
     display:grid;
     grid-template-columns:repeat(4,1fr);
     gap:25px;
@@ -263,7 +290,7 @@ pre, code{
 
 .step-card{
     background:#12233A;
-    border-radius:18px;
+    border-radius:20px;
     padding:28px;
 }
 
@@ -273,27 +300,10 @@ pre, code{
     font-weight:700;
 }
 
-/* DASHBOARD */
-.dashboard-card{
-    background:rgba(255,255,255,0.04);
-    border:1px solid rgba(0,217,255,0.2);
-    border-radius:24px;
-    padding:35px;
-    margin-top:30px;
-}
-
-.log-item{
-    background:#111827;
-    padding:18px;
-    border-radius:14px;
-    margin-bottom:15px;
-    font-size:18px;
-}
-
 /* FOOTER */
 .footer{
-    margin-top:70px;
-    padding:30px;
+    margin-top:80px;
+    padding:35px;
     text-align:center;
     border-top:1px solid rgba(255,255,255,0.08);
     color:#B8C1EC;
@@ -305,22 +315,20 @@ pre, code{
 
 # ================= NAVBAR =================
 st.markdown("""
-<div class="navbar">
-    <div class="nav-inner">
+<div class="custom-navbar">
 
-        <div class="logo">
-            🛡️ AI Shield
-        </div>
-
-        <div class="nav-links">
-            <a href="#">Home</a>
-            <a href="#dashboard">Dashboard</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
-            <a class="start-btn" href="#scanner">Start Detection</a>
-        </div>
-
+    <div class="logo">
+        🛡️ AI Shield
     </div>
+
+    <div class="nav-links">
+        <a href="#">Home</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a class="start-btn" href="#scanner">Start Detection</a>
+    </div>
+
 </div>
 """, unsafe_allow_html=True)
 
@@ -353,7 +361,7 @@ with c1:
 with c2:
     clear = st.button("🧹 Clear URL")
 
-# ================= LOGIN FLOW =================
+# ================= LOGIN =================
 if scan and not st.session_state.logged_in:
 
     st.markdown("## 🔐 Login / Signup")
@@ -389,7 +397,7 @@ elif scan and st.session_state.logged_in:
         score = random.randint(82,96)
 
         st.markdown(f"""
-        <div class="result-card danger">
+        <div class="result-box danger-box">
 
             <div class="result-title">
             ⚠️ Phishing Website Detected
@@ -401,14 +409,13 @@ elif scan and st.session_state.logged_in:
 
             Suspicious indicators identified:
             <ul>
-            <li>Fake brand impersonation detected</li>
-            <li>Credential phishing behavior observed</li>
-            <li>Unsafe domain characteristics found</li>
+                <li>Fake brand impersonation detected</li>
+                <li>Credential phishing behavior observed</li>
+                <li>Unsafe domain characteristics found</li>
             </ul>
             </div>
 
             <div class="circle-wrap">
-
                 <div class="threat-circle" style="--percentage:{score}%">
 
                     <div class="inner-circle">
@@ -417,7 +424,6 @@ elif scan and st.session_state.logged_in:
                     </div>
 
                 </div>
-
             </div>
 
         </div>
@@ -425,10 +431,10 @@ elif scan and st.session_state.logged_in:
 
     else:
 
-        score = random.randint(75,96)
+        score = random.randint(76,98)
 
         st.markdown(f"""
-        <div class="result-card safe">
+        <div class="result-box safe-box">
 
             <div class="result-title">
             ✅ Legitimate Website
@@ -446,9 +452,11 @@ elif scan and st.session_state.logged_in:
 st.markdown('<div id="dashboard"></div>', unsafe_allow_html=True)
 
 st.markdown("""
-<div class="dashboard-card">
+<div class="dashboard-box">
 
-<h1>📊 Dashboard Logs & History</h1>
+<div class="dashboard-title">
+📊 Dashboard Logs & History
+</div>
 
 <div class="log-item">
 🟢 google.com → Legitimate Website
@@ -463,7 +471,7 @@ st.markdown("""
 </div>
 
 <div class="log-item">
-🔴 paypa1-security.xyz → Phishing Website
+🔴 paypal-security.xyz → Phishing Website
 </div>
 
 </div>
@@ -501,9 +509,7 @@ st.markdown("""
 <div class="section-title">
 🚀 Features
 </div>
-""", unsafe_allow_html=True)
 
-st.markdown("""
 <div class="feature-grid">
 
 <div class="feature-card">
@@ -535,10 +541,8 @@ st.markdown("""
 <div class="section-title">
 ⚙️ How It Works
 </div>
-""", unsafe_allow_html=True)
 
-st.markdown("""
-<div class="steps">
+<div class="steps-grid">
 
 <div class="step-card">
 <div class="step-title">1️⃣ Enter URL</div>
