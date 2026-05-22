@@ -408,8 +408,15 @@ if current_page == "home":
 
         if st.button(option):
             if username and password:
+
                 st.session_state.logged_in = True
+
+                st.session_state.username = username
+
+                st.query_params["page"] = "dashboard"
+
                 st.success(f"{option} Successful!")
+
                 st.rerun()
 
     # ================= DETECTION =================
