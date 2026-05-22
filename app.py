@@ -21,6 +21,9 @@ if "logged_in" not in st.session_state:
 if "show_auth" not in st.session_state:
     st.session_state.show_auth = False
 
+if "username" not in st.session_state:
+    st.session_state.username = ""
+    
 # ================= CUSTOM CSS =================
 st.markdown("""
 <style>
