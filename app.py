@@ -422,6 +422,10 @@ if current_page == "home":
 
                 st.session_state.username = username
 
+                st.session_state.show_auth = False
+
+                st.query_params["page"] = "home"
+
                 st.success(f"{option} Successful!")
 
                 st.rerun()
