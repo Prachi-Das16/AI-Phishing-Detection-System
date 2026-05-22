@@ -510,7 +510,7 @@ if current_page == "home":
 
             safe_score = random.randint(70,92)
 
-             st.markdown(f"""
+            st.markdown(f"""
             <div class="safe-card">
 
             <div class="result-title">
