@@ -250,33 +250,29 @@ html, body, [class*="css"]{
 
 /* ================= FEATURES ================= */
 
-.features-heading{
-    padding-top:10px;
+/* FEATURES */
+.feature-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:30px;
 }
 
 .feature-card{
-    background:rgba(255,255,255,0.03);
-    border:1px solid rgba(0,217,255,0.15);
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(0,217,255,0.18);
     border-radius:24px;
-    padding:28px;
-    min-height:180px;
-    transition:0.3s;
-}
-
-.feature-card:hover{
-    transform:translateY(-5px);
-    box-shadow:0 0 24px rgba(0,217,255,0.22);
+    padding:35px;
 }
 
 .feature-title{
-    font-size:24px;
+    font-size:34px;
     font-weight:700;
-    margin-top:15px;
+    margin-bottom:15px;
 }
 
 .feature-desc{
+    font-size:20px;
     color:#B8C1EC;
-    margin-top:10px;
     line-height:1.7;
 }
 
