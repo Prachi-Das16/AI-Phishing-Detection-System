@@ -99,14 +99,15 @@ html, body, [class*="css"]{
 }
 
 /* INPUT */
-.stTextInput input{
-    background:#161B2D;
-    color:white;
-    border:2px solid #00D9FF;
-    border-radius:20px;
-    padding:18px;
-    font-size:24px;
-    min-height:65px;
+.stTextInput > div > div > input{
+    background:#161B2D !important;
+    color:white !important;
+    border:2px solid #00D9FF !important;
+    border-radius:20px !important;
+    padding:18px 20px !important;
+    font-size:24px !important;
+    height:70px !important;
+    box-sizing:border-box !important;
 }
 
 /* BUTTONS */
@@ -281,7 +282,7 @@ st.markdown("""
     <div class="nav-container">
 
         <div class="logo">
-        🛡️ AI Shield
+            🛡️ AI Shield
         </div>
 
         <div class="nav-links">
@@ -314,6 +315,8 @@ threat scoring, real-time monitoring, and secure browsing insights.
 
 # ================= SCANNER =================
 st.markdown('<div id="scanner"></div>', unsafe_allow_html=True)
+
+st.markdown("<br>", unsafe_allow_html=True)
 
 url = st.text_input("", placeholder="Enter suspicious URL here...")
 
