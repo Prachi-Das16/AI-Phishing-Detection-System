@@ -167,6 +167,12 @@ html, body, [class*="css"]{
     border-radius:24px;
     padding:30px;
     margin-top:25px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:40px;
+    flex-wrap:wrap;
 }
 
 .result-title{
@@ -433,39 +439,41 @@ if scan and url:
 
         st.markdown(f"""
         <div class="phishing-card">
-
+        
+        <div style="flex:1;min-width:320px;">
+        
         <div class="result-title">
         ⚠️ Phishing Website Detected
         </div>
-
+        
         <div class="result-desc">
         Severity Level: High Risk <br>
         Threat Level: {threat_score}% <br><br>
-
+        
         Suspicious indicators identified:
         <ul>
         <li>Fake brand impersonation detected</li>
         <li>Credential phishing behavior observed</li>
         <li>Unsafe domain characteristics found</li>
         </ul>
-
         </div>
-
+        
         </div>
-        """, unsafe_allow_html=True)
-
-        st.markdown(f"""
-        <div class="threat-wrapper">
-            <div class="threat-circle" style="--percentage:{threat_score}%">
-                <div class="inner-circle">
-                    <div>{threat_score}%</div>
-                    <div style="font-size:16px;color:#B8C1EC;">
-                    Threat Score
-                    </div>
-                </div>
-            </div>
+        
+        <div style="display:flex;justify-content:center;align-items:center;">
+        <div class="threat-circle" style="--percentage:{threat_score}%">
+        <div class="inner-circle">
+        <div>{threat_score}%</div>
+        <div style="font-size:16px;color:#B8C1EC;">
+        Threat Score
         </div>
-        """, unsafe_allow_html=True)
+    </div>
+</div>
+
+</div>
+
+</div>
+""", unsafe_allow_html=True)
 
     # ================= SAFE =================
     else:
