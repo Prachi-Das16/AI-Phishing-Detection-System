@@ -584,24 +584,30 @@ Protect users from phishing websites and malicious cyber attacks.
 
 # ================= HOW IT WORKS =================
 st.markdown("""
-<div class="features-heading"></div>
+<div class="section-title">
+⚙️ How It Works
+</div>
+
+<div class="steps-grid">
+
+<div class="step-card">
+<div class="step-title">1️⃣ Enter URL</div>
+</div>
+
+<div class="step-card">
+<div class="step-title">2️⃣ AI Analysis</div>
+</div>
+
+<div class="step-card">
+<div class="step-title">3️⃣ Threat Scanning</div>
+</div>
+
+<div class="step-card">
+<div class="step-title">4️⃣ Detection Result</div>
+</div>
+
+</div>
 """, unsafe_allow_html=True)
-
-st.markdown("## ⚙️ How It Works")
-
-h1,h2,h3,h4 = st.columns(4)
-
-with h1:
-    st.info("1️⃣ Enter URL")
-
-with h2:
-    st.info("2️⃣ AI Analysis")
-
-with h3:
-    st.info("3️⃣ Threat Scanning")
-
-with h4:
-    st.info("4️⃣ Detection Result")
 
 # ================= FOOTER =================
 st.markdown("""
