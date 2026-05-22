@@ -548,51 +548,35 @@ with c4:
 
 # ================= FEATURES =================
 st.markdown("""
-<div class="features-heading"></div>
+<div class="section-title">
+🚀 Features
+</div>
+
+<div class="feature-grid">
+
+<div class="feature-card">
+<div class="feature-title">🤖 AI Detection</div>
+<div class="feature-desc">
+Machine learning based phishing detection with intelligent URL analysis.
+</div>
+</div>
+
+<div class="feature-card">
+<div class="feature-title">⚡ Real-Time Detection</div>
+<div class="feature-desc">
+Instant cyber threat analysis with fast response and live monitoring.
+</div>
+</div>
+
+<div class="feature-card">
+<div class="feature-title">🛡️ Secure Browsing</div>
+<div class="feature-desc">
+Protect users from phishing websites and malicious cyber attacks.
+</div>
+</div>
+
+</div>
 """, unsafe_allow_html=True)
-
-st.markdown("## 🚀 Features")
-
-f1,f2,f3 = st.columns(3)
-
-with f1:
-    st.markdown("""
-    <div class="feature-card">
-        <div class="feature-title">
-        🤖 AI Detection
-        </div>
-
-        <div class="feature-desc">
-        Machine learning based phishing detection with intelligent URL analysis.
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with f2:
-    st.markdown("""
-    <div class="feature-card">
-        <div class="feature-title">
-        ⚡ Real-Time Detection
-        </div>
-
-        <div class="feature-desc">
-        Instant cyber threat analysis with fast response monitoring.
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with f3:
-    st.markdown("""
-    <div class="feature-card">
-        <div class="feature-title">
-        🛡️ Secure Browsing
-        </div>
-
-        <div class="feature-desc">
-        Protect users from phishing websites and malicious cyber attacks.
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
 
 # ================= HOW IT WORKS =================
 st.markdown("""
