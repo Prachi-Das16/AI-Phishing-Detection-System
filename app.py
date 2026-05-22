@@ -252,10 +252,14 @@ html, body, [class*="css"]{
 
 /* SECTIONS */
 .section-title{
-    font-size:56px;
-    font-weight:700;
+    font-size:72px;
+    font-weight:800;
     margin-top:90px;
-    margin-bottom:30px;
+    margin-bottom:35px;
+    color:white;
+    display:flex;
+    align-items:center;
+    gap:18px;
 }
 
 /* FEATURES */
