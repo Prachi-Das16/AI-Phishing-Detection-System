@@ -41,6 +41,22 @@ html, body, [class*="css"]{
     padding-bottom:2rem;
 }
 
+/* ================= DASHBOARD ================= */
+
+[data-testid="stDataFrame"]{
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(0,217,255,0.18);
+    border-radius:22px;
+    padding:10px;
+}
+
+[data-testid="stDataFrame"] button{
+    background:#10182B !important;
+    color:#00D9FF !important;
+    border-radius:10px !important;
+    border:1px solid rgba(0,217,255,0.3) !important;
+}
+
 /* ================= NAVBAR ================= */
 
 .navbar{
@@ -318,10 +334,10 @@ st.markdown("""
 
 <div class="nav-links">
 <a href="#">Home</a>
-<a href="#">Dashboard</a>
+<a href="#dashboard">Dashboard</a>
 <a href="#">About</a>
 <a href="#">Contact</a>
-<a class="cta-btn" href="#">Start Detection</a>
+<a class="cta-btn" href="#scanner">Start Detection</a>
 </div>
 
 </div>
@@ -620,6 +636,32 @@ with h3:
 
 with h4:
     st.info("4️⃣ Detection Result")
+
+# ================= DASHBOARD =================
+
+st.markdown("""
+<div id="dashboard" class="section-title">
+📊 Dashboard Logs & History
+</div>
+""", unsafe_allow_html=True)
+
+if st.session_state.logged_in:
+
+    dashboard_data = [
+        ("google.com", "Legitimate Website", "2026-08-22 11:12"),
+        ("goog1e.com", "Phishing Website", "2026-08-22 11:14"),
+        ("github.com", "Legitimate Website", "2026-08-22 11:17"),
+        ("paypal-security.xyz", "Phishing Website", "2026-08-22 11:19")
+    ]
+
+    st.dataframe(
+        dashboard_data,
+        use_container_width=True
+    )
+
+else:
+
+    st.warning("Please Login First to View Dashboard Logs")
 
 # ================= FOOTER =================
 st.markdown("""
