@@ -28,6 +28,15 @@ html, body, [class*="css"]{
     font-family:'Poppins',sans-serif;
 }
 
+/* REMOVE CODE BLOCK STYLE */
+code{
+    display:none !important;
+}
+
+pre{
+    display:none !important;
+}
+
 /* NAVBAR */
 .navbar{
     position:fixed;
@@ -74,12 +83,12 @@ html, body, [class*="css"]{
 
 /* HERO */
 .hero{
-    padding-top:140px;
-    padding-bottom:20px;
+    padding-top:150px;
+    padding-bottom:30px;
 }
 
 .hero-title{
-    font-size:76px;
+    font-size:74px;
     font-weight:800;
     line-height:1.1;
     margin-bottom:18px;
@@ -106,19 +115,19 @@ html, body, [class*="css"]{
     border-radius:20px !important;
     padding:18px 20px !important;
     font-size:24px !important;
-    height:70px !important;
+    min-height:70px !important;
     box-sizing:border-box !important;
 }
 
 /* BUTTONS */
 .stButton button{
-    background:transparent;
-    color:#00D9FF;
-    border:2px solid #00D9FF;
-    border-radius:14px;
-    padding:14px 34px;
-    font-size:20px;
-    transition:0.3s;
+    background:transparent !important;
+    color:#00D9FF !important;
+    border:2px solid #00D9FF !important;
+    border-radius:14px !important;
+    padding:14px 30px !important;
+    font-size:20px !important;
+    transition:0.3s !important;
 }
 
 .stButton button:hover{
@@ -126,20 +135,20 @@ html, body, [class*="css"]{
     transform:translateY(-2px);
 }
 
-/* RESULT CARDS */
+/* RESULT */
 .phishing-card{
-    background:rgba(255,59,92,0.12);
+    background:rgba(255,59,92,0.10);
     border:1px solid #FF3B5C;
-    border-radius:28px;
-    padding:35px;
+    border-radius:30px;
+    padding:40px;
     margin-top:40px;
 }
 
 .safe-card{
     background:rgba(0,255,157,0.10);
     border:1px solid #00FF9D;
-    border-radius:28px;
-    padding:35px;
+    border-radius:30px;
+    padding:40px;
     margin-top:40px;
 }
 
@@ -151,13 +160,13 @@ html, body, [class*="css"]{
 
 .result-desc{
     font-size:24px;
-    line-height:1.9;
+    line-height:1.8;
 }
 
 /* THREAT CIRCLE */
 .threat-circle{
-    width:260px;
-    height:260px;
+    width:240px;
+    height:240px;
     border-radius:50%;
     background:
     radial-gradient(closest-side,#050816 79%,transparent 80% 100%),
@@ -175,8 +184,8 @@ html, body, [class*="css"]{
 
 /* STATS */
 .stats-section{
-    margin-top:40px;
-    margin-bottom:30px;
+    margin-top:60px;
+    margin-bottom:40px;
 }
 
 .stats-grid{
@@ -193,52 +202,47 @@ html, body, [class*="css"]{
 }
 
 .stat-number{
-    font-size:58px;
+    font-size:56px;
     font-weight:800;
     color:#00FF9D;
 }
 
 .stat-label{
-    font-size:24px;
+    font-size:22px;
     margin-top:18px;
     color:#B8C1EC;
 }
 
 /* FEATURES */
 .section-title{
-    font-size:56px;
+    font-size:54px;
     font-weight:700;
     margin-top:25px;
     margin-bottom:25px;
-}
-
-.feature-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:30px;
 }
 
 .feature-card{
     background:rgba(255,255,255,0.04);
     border:1px solid rgba(0,217,255,0.25);
     border-radius:26px;
-    padding:40px;
+    padding:35px;
     transition:0.3s;
+    height:100%;
 }
 
 .feature-card:hover{
-    transform:translateY(-6px);
-    box-shadow:0 0 25px rgba(0,217,255,0.2);
+    transform:translateY(-5px);
+    box-shadow:0 0 25px rgba(0,217,255,0.15);
 }
 
 .feature-title{
-    font-size:34px;
+    font-size:32px;
     font-weight:700;
     margin-bottom:18px;
 }
 
 .feature-desc{
-    font-size:22px;
+    font-size:21px;
     color:#B8C1EC;
     line-height:1.7;
 }
@@ -258,7 +262,7 @@ html, body, [class*="css"]{
 }
 
 .step-title{
-    font-size:30px;
+    font-size:28px;
     font-weight:700;
     color:#00D9FF;
 }
@@ -277,8 +281,9 @@ html, body, [class*="css"]{
 """, unsafe_allow_html=True)
 
 # ================= NAVBAR =================
-st.markdown("""
+navbar_html = """
 <div class="navbar">
+
     <div class="nav-container">
 
         <div class="logo">
@@ -294,11 +299,14 @@ st.markdown("""
         </div>
 
     </div>
+
 </div>
-""", unsafe_allow_html=True)
+"""
+
+st.markdown(navbar_html, unsafe_allow_html=True)
 
 # ================= HERO =================
-st.markdown("""
+hero_html = """
 <div class="hero">
 
 <div class="hero-title">
@@ -311,16 +319,16 @@ threat scoring, real-time monitoring, and secure browsing insights.
 </div>
 
 </div>
-""", unsafe_allow_html=True)
+"""
+
+st.markdown(hero_html, unsafe_allow_html=True)
 
 # ================= SCANNER =================
 st.markdown('<div id="scanner"></div>', unsafe_allow_html=True)
 
-st.markdown("<br>", unsafe_allow_html=True)
-
 url = st.text_input("", placeholder="Enter suspicious URL here...")
 
-c1, c2, c3 = st.columns([1,1,5])
+c1, c2, c3 = st.columns([1,1,6])
 
 with c1:
     scan = st.button("🚀 Scan URL")
@@ -334,85 +342,79 @@ if scan and url:
     time.sleep(1)
 
     suspicious_keywords = [
-        "login",
-        "verify",
-        "security",
-        "update",
-        "banking",
-        "paypal",
-        "account",
-        "free",
-        "bonus",
-        "secure",
         "goog1e",
-        ".xyz"
+        "paypa1",
+        "secure-login",
+        "verify-account",
+        ".xyz",
+        "update-security",
+        "free-bonus",
+        "login"
     ]
 
-    phishing_detected = False
-
-    for word in suspicious_keywords:
-        if word in url.lower():
-            phishing_detected = True
+    phishing_detected = any(word in url.lower() for word in suspicious_keywords)
 
     if phishing_detected:
 
-        threat_score = random.randint(80,98)
+        threat_score = random.randint(82,98)
 
-        st.markdown(f"""
+        phishing_html = f"""
         <div class="phishing-card">
 
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:30px;">
 
-        <div style="flex:1;min-width:300px;">
+            <div style="flex:1;min-width:300px;">
 
-        <div class="result-title">
-        ⚠️ Phishing Website Detected
-        </div>
+                <div class="result-title">
+                ⚠️ Phishing Website Detected
+                </div>
 
-        <div class="result-desc">
+                <div class="result-desc">
 
-        Severity Level: High Risk <br>
-        Threat Level: {threat_score}% <br><br>
+                Severity Level: High Risk <br>
+                Threat Level: {threat_score}% <br><br>
 
-        Suspicious indicators identified:
-        <ul>
-        <li>Fake brand impersonation detected</li>
-        <li>Credential phishing behavior observed</li>
-        <li>Unsafe domain characteristics found</li>
-        </ul>
+                Suspicious indicators identified:
+                <ul>
+                <li>Fake brand impersonation detected</li>
+                <li>Credential phishing behavior observed</li>
+                <li>Unsafe domain characteristics found</li>
+                </ul>
 
-        </div>
+                </div>
 
-        </div>
+            </div>
 
-        <div style="display:flex;justify-content:center;align-items:center;padding-right:20px;">
+            <div style="display:flex;justify-content:center;align-items:center;">
 
-        <div class="threat-circle" style="--percentage:{threat_score}%">
+                <div class="threat-circle" style="--percentage:{threat_score}%">
 
-        <div class="inner-circle">
+                    <div class="inner-circle">
 
-        <div>{threat_score}%</div>
+                        <div>{threat_score}%</div>
 
-        <div style="font-size:18px;color:#B8C1EC;">
-        Threat Score
-        </div>
+                        <div style="font-size:16px;color:#B8C1EC;">
+                        Threat Score
+                        </div>
 
-        </div>
+                    </div>
 
-        </div>
+                </div>
 
-        </div>
-
-        </div>
+            </div>
 
         </div>
-        """, unsafe_allow_html=True)
+
+        </div>
+        """
+
+        st.markdown(phishing_html, unsafe_allow_html=True)
 
     else:
 
-        safe_score = random.randint(70,95)
+        safe_score = random.randint(75,95)
 
-        st.markdown(f"""
+        safe_html = f"""
         <div class="safe-card">
 
         <div class="result-title">
@@ -429,10 +431,12 @@ if scan and url:
         </div>
 
         </div>
-        """, unsafe_allow_html=True)
+        """
+
+        st.markdown(safe_html, unsafe_allow_html=True)
 
 # ================= STATS =================
-st.markdown("""
+stats_html = """
 <div class="stats-section" id="dashboard">
 
 <div class="stats-grid">
@@ -460,7 +464,9 @@ st.markdown("""
 </div>
 
 </div>
-""", unsafe_allow_html=True)
+"""
+
+st.markdown(stats_html, unsafe_allow_html=True)
 
 # ================= FEATURES =================
 st.markdown("""
