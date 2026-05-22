@@ -334,7 +334,7 @@ st.markdown("""
 
 <div class="nav-links">
 <a href="?page=home">Home</a>
-<a href="?page=dashboard">Dashboard</a>
+<a href="#">Dashboard</a>
 <a href="#">About</a>
 <a href="#">Contact</a>
 <a class="cta-btn" href="#scanner">Start Detection</a>
