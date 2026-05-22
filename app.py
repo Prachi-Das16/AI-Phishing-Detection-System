@@ -333,7 +333,7 @@ st.markdown("""
 </div>
 
 <div class="nav-links">
-<a href="#">Home</a>
+<a href="?page=home">Home</a>
 <a href="?page=dashboard">Dashboard</a>
 <a href="#">About</a>
 <a href="#">Contact</a>
@@ -412,8 +412,6 @@ if current_page == "home":
                 st.session_state.logged_in = True
 
                 st.session_state.username = username
-
-                st.query_params["page"] = "dashboard"
 
                 st.success(f"{option} Successful!")
 
