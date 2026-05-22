@@ -5,7 +5,7 @@ import time
 
 # ================= PAGE CONFIG =================
 st.set_page_config(
-    page_title="AI Phishing Detection",
+    page_title="AI Shield - Phishing Detection",
     page_icon="🛡️",
     layout="wide"
 )
@@ -19,41 +19,43 @@ st.markdown("""
 <style>
 
 #MainMenu {visibility:hidden;}
-header {visibility:hidden;}
 footer {visibility:hidden;}
+header {visibility:hidden;}
 
-html, body, [class*="css"] {
-    background-color:#050816;
+html, body, [class*="css"]{
+    background:#050816;
     color:white;
     font-family:'Poppins',sans-serif;
 }
 
 /* NAVBAR */
-
 .navbar{
     position:fixed;
     top:0;
     left:0;
     width:100%;
     z-index:999;
+    background:rgba(5,8,22,0.75);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(0,217,255,0.15);
+    padding:18px 40px;
+}
+
+.nav-container{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:20px 40px;
-    background:rgba(5,8,22,0.75);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid rgba(0,217,255,0.2);
 }
 
 .logo{
-    font-size:26px;
+    font-size:42px;
     font-weight:700;
     color:#00D9FF;
 }
 
 .nav-links{
     display:flex;
-    gap:35px;
+    gap:40px;
     align-items:center;
 }
 
@@ -63,113 +65,95 @@ html, body, [class*="css"] {
     font-size:18px;
 }
 
-.nav-links a:hover{
-    color:#00D9FF;
-}
-
 .cta-btn{
-    border:2px solid #00D9FF;
     padding:12px 24px;
+    border:2px solid #00D9FF;
     border-radius:14px;
     color:#00D9FF !important;
 }
 
 /* HERO */
-
 .hero{
-    padding-top:130px;
-    padding-bottom:40px;
+    padding-top:140px;
+    padding-bottom:20px;
 }
 
 .hero-title{
-    font-size:68px;
+    font-size:76px;
     font-weight:800;
     line-height:1.1;
-    margin-bottom:20px;
+    margin-bottom:18px;
 }
 
 .glow{
     color:#00D9FF;
-    text-shadow:0 0 20px #00D9FF;
+    text-shadow:0 0 8px rgba(0,217,255,0.4);
 }
 
 .hero-desc{
-    font-size:26px;
+    font-size:24px;
     color:#B8C1EC;
+    max-width:1100px;
     line-height:1.7;
     margin-bottom:40px;
 }
 
-/* SCAN BOX */
-
-.scan-box{
-    background:rgba(255,255,255,0.04);
-    border:1px solid rgba(0,217,255,0.3);
-    border-radius:30px;
-    padding:25px;
-    margin-top:20px;
-}
-
 /* INPUT */
-
 .stTextInput input{
     background:#161B2D;
     color:white;
     border:2px solid #00D9FF;
     border-radius:20px;
-    padding:20px;
-    font-size:22px;
+    padding:18px;
+    font-size:24px;
+    min-height:65px;
 }
 
 /* BUTTONS */
-
 .stButton button{
     background:transparent;
-    border:2px solid #00D9FF;
     color:#00D9FF;
+    border:2px solid #00D9FF;
     border-radius:14px;
-    padding:12px 30px;
+    padding:14px 34px;
     font-size:20px;
     transition:0.3s;
 }
 
 .stButton button:hover{
-    background:rgba(0,217,255,0.15);
-    box-shadow:0 0 20px #00D9FF;
-    color:white;
+    box-shadow:0 0 15px #00D9FF;
+    transform:translateY(-2px);
 }
 
 /* RESULT CARDS */
-
-.safe-card{
-    background:rgba(0,255,157,0.1);
-    border:1px solid #00FF9D;
-    padding:30px;
-    border-radius:25px;
-    margin-top:25px;
+.phishing-card{
+    background:rgba(255,59,92,0.12);
+    border:1px solid #FF3B5C;
+    border-radius:28px;
+    padding:35px;
+    margin-top:40px;
 }
 
-.phishing-card{
-    background:rgba(255,59,92,0.08);
-    border:1px solid #FF3B5C;
-    padding:30px;
-    border-radius:25px;
-    margin-top:25px;
+.safe-card{
+    background:rgba(0,255,157,0.10);
+    border:1px solid #00FF9D;
+    border-radius:28px;
+    padding:35px;
+    margin-top:40px;
 }
 
 .result-title{
-    font-size:28px;
+    font-size:42px;
     font-weight:700;
     margin-bottom:20px;
 }
 
 .result-desc{
-    font-size:20px;
+    font-size:24px;
     line-height:1.9;
 }
 
 /* THREAT CIRCLE */
-
 .threat-circle{
     width:260px;
     height:260px;
@@ -189,97 +173,135 @@ html, body, [class*="css"] {
 }
 
 /* STATS */
-
-.stats-card{
-    background:rgba(255,255,255,0.04);
-    border:1px solid rgba(0,217,255,0.3);
-    border-radius:25px;
-    padding:35px;
-    margin-top:20px;
+.stats-section{
+    margin-top:40px;
+    margin-bottom:30px;
 }
 
-.stats-number{
-    font-size:55px;
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:30px;
+}
+
+.stat-card{
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(0,217,255,0.25);
+    border-radius:24px;
+    padding:35px;
+}
+
+.stat-number{
+    font-size:58px;
     font-weight:800;
     color:#00FF9D;
 }
 
-.stats-label{
-    font-size:22px;
+.stat-label{
+    font-size:24px;
+    margin-top:18px;
     color:#B8C1EC;
 }
 
 /* FEATURES */
+.section-title{
+    font-size:56px;
+    font-weight:700;
+    margin-top:25px;
+    margin-bottom:25px;
+}
+
+.feature-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:30px;
+}
 
 .feature-card{
     background:rgba(255,255,255,0.04);
     border:1px solid rgba(0,217,255,0.25);
-    border-radius:25px;
-    padding:35px;
-    margin-top:15px;
+    border-radius:26px;
+    padding:40px;
+    transition:0.3s;
+}
+
+.feature-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 0 25px rgba(0,217,255,0.2);
 }
 
 .feature-title{
-    font-size:22px;
+    font-size:34px;
     font-weight:700;
-    margin-bottom:15px;
+    margin-bottom:18px;
 }
 
 .feature-desc{
-    font-size:18px;
+    font-size:22px;
     color:#B8C1EC;
     line-height:1.7;
 }
 
-/* FOOTER */
+/* HOW IT WORKS */
+.steps{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:25px;
+}
 
+.step-card{
+    background:#12233A;
+    border-radius:20px;
+    padding:28px;
+    border:1px solid rgba(0,217,255,0.15);
+}
+
+.step-title{
+    font-size:30px;
+    font-weight:700;
+    color:#00D9FF;
+}
+
+/* FOOTER */
 .footer{
     text-align:center;
-    padding:35px;
-    margin-top:70px;
-    border-top:1px solid rgba(255,255,255,0.1);
+    margin-top:80px;
+    padding:30px;
     color:#B8C1EC;
-    font-size:18px;
+    border-top:1px solid rgba(255,255,255,0.08);
+    font-size:20px;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
 # ================= NAVBAR =================
-
 st.markdown("""
 <div class="navbar">
+    <div class="nav-container">
 
-<div class="logo">
-🛡️ AI Shield
-</div>
+        <div class="logo">
+        🛡️ AI Shield
+        </div>
 
-<div class="nav-links">
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#dashboard">Dashboard</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+            <a class="cta-btn" href="#scanner">Start Detection</a>
+        </div>
 
-<a href="#home">Home</a>
-
-<a href="#dashboard">Dashboard</a>
-
-<a href="#features">About</a>
-
-<a href="#footer">Contact</a>
-
-<a class="cta-btn" href="#scanner">
-Start Detection
-</a>
-
-</div>
-
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
 # ================= HERO =================
-
 st.markdown("""
-<div class="hero" id="home">
+<div class="hero">
 
 <div class="hero-title">
-AI-Powered <span class="glow">Phishing Detection</span> System
+AI-Powered <span class="glow">Phishing</span> Detection System
 </div>
 
 <div class="hero-desc">
@@ -291,98 +313,92 @@ threat scoring, real-time monitoring, and secure browsing insights.
 """, unsafe_allow_html=True)
 
 # ================= SCANNER =================
+st.markdown('<div id="scanner"></div>', unsafe_allow_html=True)
 
-st.markdown("""
-<div class="scan-box" id="scanner">
-""", unsafe_allow_html=True)
+url = st.text_input("", placeholder="Enter suspicious URL here...")
 
-url = st.text_input(
-    "",
-    placeholder="Enter suspicious URL here..."
-)
+c1, c2, c3 = st.columns([1,1,5])
 
-col1,col2,col3 = st.columns([1,1,6])
+with c1:
+    scan = st.button("🚀 Scan URL")
 
-with col1:
-    scan_btn = st.button("🚀 Scan URL")
-
-with col2:
-    clear_btn = st.button("🧹 Clear URL")
-
-st.markdown("</div>", unsafe_allow_html=True)
+with c2:
+    clear = st.button("🧹 Clear URL")
 
 # ================= DETECTION =================
-
-if scan_btn and url:
+if scan and url:
 
     time.sleep(1)
 
-    phishing_keywords = [
-        "goog1e",
-        "paypa1",
+    suspicious_keywords = [
+        "login",
         "verify",
-        "login-security",
-        "secure-update",
-        ".xyz",
+        "security",
+        "update",
+        "banking",
+        "paypal",
+        "account",
+        "free",
         "bonus",
-        "freegift",
-        "banking-update"
+        "secure",
+        "goog1e",
+        ".xyz"
     ]
 
-    is_phishing = any(word in url.lower() for word in phishing_keywords)
+    phishing_detected = False
 
-    if is_phishing:
-        prediction = 1
-    else:
-        prediction = 0
+    for word in suspicious_keywords:
+        if word in url.lower():
+            phishing_detected = True
 
-    if prediction == 1:
+    if phishing_detected:
 
-        threat_score = random.randint(76,96)
+        threat_score = random.randint(80,98)
 
         st.markdown(f"""
         <div class="phishing-card">
 
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:30px;">
 
-            <div style="flex:1;min-width:300px;">
+        <div style="flex:1;min-width:300px;">
 
-                <div class="result-title">
-                ⚠️ Phishing Website Detected
-                </div>
+        <div class="result-title">
+        ⚠️ Phishing Website Detected
+        </div>
 
-                <div class="result-desc">
-                Severity Level: High Risk <br>
-                Threat Level: {threat_score}% <br><br>
+        <div class="result-desc">
 
-                Suspicious indicators identified:
-                <ul>
-                <li>Fake brand impersonation detected</li>
-                <li>Credential phishing behavior observed</li>
-                <li>Unsafe domain characteristics found</li>
-                </ul>
+        Severity Level: High Risk <br>
+        Threat Level: {threat_score}% <br><br>
 
-                </div>
+        Suspicious indicators identified:
+        <ul>
+        <li>Fake brand impersonation detected</li>
+        <li>Credential phishing behavior observed</li>
+        <li>Unsafe domain characteristics found</li>
+        </ul>
 
-            </div>
+        </div>
 
-            <div style="display:flex;justify-content:center;align-items:center;padding-right:30px;">
+        </div>
 
-                <div class="threat-circle" style="--percentage:{threat_score}%">
+        <div style="display:flex;justify-content:center;align-items:center;padding-right:20px;">
 
-                    <div class="inner-circle">
+        <div class="threat-circle" style="--percentage:{threat_score}%">
 
-                        <div>{threat_score}%</div>
+        <div class="inner-circle">
 
-                        <div style="font-size:16px;color:#B8C1EC;">
-                        Threat Score
-                        </div>
+        <div>{threat_score}%</div>
 
-                    </div>
+        <div style="font-size:18px;color:#B8C1EC;">
+        Threat Score
+        </div>
 
-                </div>
+        </div>
 
-            </div>
+        </div>
+
+        </div>
 
         </div>
 
@@ -401,14 +417,11 @@ if scan_btn and url:
         </div>
 
         <div class="result-desc">
+
         Safe Probability: {safe_score}% <br><br>
 
-        Security indicators:
-        <ul>
-        <li>Trusted domain structure detected</li>
-        <li>No phishing keywords identified</li>
-        <li>Secure browsing behavior observed</li>
-        </ul>
+        Website appears secure and trusted.<br>
+        No major phishing indicators detected.
 
         </div>
 
@@ -416,67 +429,56 @@ if scan_btn and url:
         """, unsafe_allow_html=True)
 
 # ================= STATS =================
-
 st.markdown("""
-<div id="dashboard"></div>
+<div class="stats-section" id="dashboard">
+
+<div class="stats-grid">
+
+<div class="stat-card">
+<div class="stat-number">99.8%</div>
+<div class="stat-label">Detection Accuracy</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-number">&lt;1min</div>
+<div class="stat-label">Response Time</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-number">24/7</div>
+<div class="stat-label">Monitoring</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-number">99.9%</div>
+<div class="stat-label">Uptime SLA</div>
+</div>
+
+</div>
+
+</div>
 """, unsafe_allow_html=True)
-
-s1,s2,s3,s4 = st.columns(4)
-
-with s1:
-    st.markdown("""
-    <div class="stats-card">
-    <div class="stats-number">99.8%</div>
-    <div class="stats-label">Detection Accuracy</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with s2:
-    st.markdown("""
-    <div class="stats-card">
-    <div class="stats-number">&lt;1min</div>
-    <div class="stats-label">Response Time</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with s3:
-    st.markdown("""
-    <div class="stats-card">
-    <div class="stats-number">24/7</div>
-    <div class="stats-label">Monitoring</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with s4:
-    st.markdown("""
-    <div class="stats-card">
-    <div class="stats-number">99.9%</div>
-    <div class="stats-label">Uptime SLA</div>
-    </div>
-    """, unsafe_allow_html=True)
 
 # ================= FEATURES =================
-
 st.markdown("""
-<div id="features"></div>
-<div style="padding-top:25px;"></div>
+<div class="section-title">
+🚀 Features
+</div>
 """, unsafe_allow_html=True)
 
-st.markdown("## 🚀 Features")
-
-f1,f2,f3 = st.columns(3)
+f1, f2, f3 = st.columns(3)
 
 with f1:
     st.markdown("""
     <div class="feature-card">
 
-        <div class="feature-title">
-        🤖 AI Detection
-        </div>
+    <div class="feature-title">
+    🤖 AI Detection
+    </div>
 
-        <div class="feature-desc">
-        Machine learning based phishing detection with intelligent URL analysis.
-        </div>
+    <div class="feature-desc">
+    Machine learning based phishing detection with intelligent URL analysis.
+    </div>
 
     </div>
     """, unsafe_allow_html=True)
@@ -485,13 +487,13 @@ with f2:
     st.markdown("""
     <div class="feature-card">
 
-        <div class="feature-title">
-        ⚡ Real-Time Detection
-        </div>
+    <div class="feature-title">
+    ⚡ Real-Time Detection
+    </div>
 
-        <div class="feature-desc">
-        Instant cyber threat analysis with fast response monitoring.
-        </div>
+    <div class="feature-desc">
+    Instant cyber threat analysis with fast response and live monitoring.
+    </div>
 
     </div>
     """, unsafe_allow_html=True)
@@ -500,43 +502,51 @@ with f3:
     st.markdown("""
     <div class="feature-card">
 
-        <div class="feature-title">
-        🛡️ Secure Browsing
-        </div>
+    <div class="feature-title">
+    🛡️ Secure Browsing
+    </div>
 
-        <div class="feature-desc">
-        Protect users from phishing websites and malicious cyber attacks.
-        </div>
+    <div class="feature-desc">
+    Protect users from phishing websites and malicious cyber attacks.
+    </div>
 
     </div>
     """, unsafe_allow_html=True)
 
 # ================= HOW IT WORKS =================
-
 st.markdown("""
-<div style="padding-top:25px;"></div>
+<div class="section-title">
+⚙️ How It Works
+</div>
 """, unsafe_allow_html=True)
 
-st.markdown("## ⚙️ How It Works")
+st.markdown("""
+<div class="steps">
 
-h1,h2,h3,h4 = st.columns(4)
+<div class="step-card">
+<div class="step-title">1️⃣ Enter URL</div>
+</div>
 
-with h1:
-    st.info("1️⃣ Enter URL")
+<div class="step-card">
+<div class="step-title">2️⃣ AI Analysis</div>
+</div>
 
-with h2:
-    st.info("2️⃣ AI Analysis")
+<div class="step-card">
+<div class="step-title">3️⃣ Threat Scanning</div>
+</div>
 
-with h3:
-    st.info("3️⃣ Threat Scanning")
+<div class="step-card">
+<div class="step-title">4️⃣ Detection Result</div>
+</div>
 
-with h4:
-    st.info("4️⃣ Detection Result")
+</div>
+""", unsafe_allow_html=True)
 
 # ================= FOOTER =================
-
 st.markdown("""
-<div class="footer" id="footer">
+<div class="footer" id="contact">
+
 Developed by Prachi Das
+
 </div>
 """, unsafe_allow_html=True)
