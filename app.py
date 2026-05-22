@@ -404,9 +404,12 @@ if current_page == "home":
         )
 
         username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
+        password = st.text_input(
+            "Password", type="password"
+        )
 
         if st.button(option):
+            
             if username and password:
 
                 st.session_state.logged_in = True
