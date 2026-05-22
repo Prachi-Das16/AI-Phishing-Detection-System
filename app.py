@@ -334,7 +334,7 @@ st.markdown("""
 
 <div class="nav-links">
 <a href="?page=home">Home</a>
-<a href="#">Dashboard</a>
+<a href="?page=dashboard">Dashboard</a>
 <a href="#">About</a>
 <a href="#">Contact</a>
 <a class="cta-btn" href="#scanner">Start Detection</a>
@@ -345,7 +345,7 @@ st.markdown("""
 
 query_params = st.query_params
 
-current_page = query_params.get("page", "home")
+current_page = st.query_params.get("page", "home")
 
 if current_page == "home":
 
