@@ -250,6 +250,14 @@ html, body, [class*="css"]{
 
 /* ================= FEATURES ================= */
 
+/* SECTIONS */
+.section-title{
+    font-size:56px;
+    font-weight:700;
+    margin-top:90px;
+    margin-bottom:30px;
+}
+
 /* FEATURES */
 .feature-grid{
     display:grid;
