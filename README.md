@@ -42,32 +42,21 @@ The system analyzes URL patterns using TF-IDF feature extraction and machine lea
 * ⚡ Instant Prediction Results
 
 ---
+## 📸 Screenshots
 
-## 🏗️ System Architecture
+### 🏠 Home Page
 
-```text
-User URL Input
-      │
-      ▼
-URL Preprocessing
-(Tokenization + Stemming)
-      │
-      ▼
-TF-IDF Vectorization
-      │
-      ▼
-Machine Learning Model
-(Multinomial Naive Bayes)
-      │
-      ▼
-Threat Analysis Layer
-      │
-      ▼
-Safe / Phishing Prediction
-      │
-      ▼
-Streamlit Dashboard Output
-```
+![Image Alt](https://github.com/Prachi-Das16/AI-Phishing-Detection-System/blob/506202fd07c31303f1e39cfb8924fcaf5c0bf7c9/screenshots/home%20page.png)
+
+### 🚨 Phishing URL Detection
+
+![Image Alt](https://github.com/Prachi-Das16/AI-Phishing-Detection-System/blob/506202fd07c31303f1e39cfb8924fcaf5c0bf7c9/screenshots/phishing%20url%20image.png)
+
+### ✅ Legitimate URL Detection
+
+![Image Alt](https://github.com/Prachi-Das16/AI-Phishing-Detection-System/blob/506202fd07c31303f1e39cfb8924fcaf5c0bf7c9/screenshots/legitimate%20url%20image.png)
+
+---
 
 ## 🛠️ Technology Stack
 
@@ -135,65 +124,6 @@ Reason:
 * Higher accuracy
 * Faster inference
 * Better suitability for TF-IDF text features
-
----
-
-## 📸 Screenshots
-
-### 🏠 Home Page
-
-![Image Alt](https://github.com/Prachi-Das16/AI-Phishing-Detection-System/blob/25abd895f94ff944a9bfebeccf1f70ff18a03251/home%20page.png)
-
-### ✅ Legitimate URL Detection
-
-<img width="100%" src="screenshots/safe-result.png">
-
-### 🚨 Phishing URL Detection
-
-<img width="100%" src="screenshots/phishing-result.png">
-
----
-
-## 📁 Repository Structure
-
-```text
-AI-Phishing-Detection-System/
-│
-├── AI_Phishing_Detection.ipynb
-├── app.py
-├── phishing_mnb.pkl
-├── vectorizer.pkl
-├── requirements.txt
-└── README.md
-```
-
----
-
-## ⚙️ Installation
-
-Clone the repository:
-
-```bash
-git clone https://github.com/Prachi-Das16/AI-Phishing-Detection-System.git
-```
-
-Navigate to project directory:
-
-```bash
-cd AI-Phishing-Detection-System
-```
-
-Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-Run the application:
-
-```bash
-streamlit run app.py
-```
 
 ---
 
