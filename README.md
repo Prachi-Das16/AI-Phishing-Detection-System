@@ -142,7 +142,7 @@ Reason:
 
 ### 🏠 Home Page
 
-<img width="100%" src="screenshots/homepage.png">
+https://github.com/Prachi-Das16/AI-Phishing-Detection-System/blob/25abd895f94ff944a9bfebeccf1f70ff18a03251/home%20page.png
 
 ### ✅ Legitimate URL Detection
 
@@ -151,8 +151,6 @@ Reason:
 ### 🚨 Phishing URL Detection
 
 <img width="100%" src="screenshots/phishing-result.png">
-
-> Create a folder named **screenshots** and upload your images there.
 
 ---
 
