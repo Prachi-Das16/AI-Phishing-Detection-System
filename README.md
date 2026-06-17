@@ -142,7 +142,7 @@ Reason:
 
 ### 🏠 Home Page
 
-https://github.com/Prachi-Das16/AI-Phishing-Detection-System/blob/25abd895f94ff944a9bfebeccf1f70ff18a03251/home%20page.png
+![Image Alt](https://github.com/Prachi-Das16/AI-Phishing-Detection-System/blob/25abd895f94ff944a9bfebeccf1f70ff18a03251/home%20page.png)
 
 ### ✅ Legitimate URL Detection
 
